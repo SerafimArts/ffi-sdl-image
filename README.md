@@ -41,6 +41,31 @@ $ composer require serafim/ffi-sdl-image
 
 ## API
 
+Below is the information on the improved SDL Image API, however you can switch 
+to the original one by turning on the autocomplete:
+
+```php
+/** @var \Serafim\SDLImage\SDLImageNativeApiAutocomplete $image */
+$image = new \Serafim\SDLImage\Image();
+
+$image->IMG_Load(__DIR__ . '/path/to/image');
+```
+
+Please note that when using the original calls, you will have to cast the 
+types to the desired ones with your hands!
+
+```php
+/** @var \Serafim\SDLImage\SDLImageNativeApiAutocomplete $image */
+$image = new \Serafim\SDLImage\Image();
+
+$surface = $image->IMG_Load(__DIR__ . '/path/to/image');
+
+$sdl = new \Serafim\SDL\SDL();
+
+$sdlSurface = $sdl->cast('SDL_Surface*', $surface); // <<<<< HERE
+$sdl->freeSurface($sdlSurface);
+```
+
 ### init
 
 Loads dynamic libraries and prepares them for use.
