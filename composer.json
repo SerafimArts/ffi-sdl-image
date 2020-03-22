@@ -1,0 +1,60 @@
+{
+    "name": "serafim/ffi-sdl-image",
+    "description": "PHP FFI to SDL Image bindings",
+    "type": "library",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/SerafimArts/ffi-sdl-image/issues",
+        "source": "https://github.com/SerafimArts/ffi-sdl-image"
+    },
+    "keywords": [
+        "sdl",
+        "ffi",
+        "bindings",
+        "opengl",
+        "graphics",
+        "library",
+        "image"
+    ],
+    "homepage": "https://github.com/SerafimArts/ffi-sdl-image",
+    "authors": [
+        {
+            "name": "Kirill Nesmeyanov",
+            "email": "nesk@xakep.ru"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../SDL"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "ext-ffi": "*",
+        "serafim/ffi-sdl": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Serafim\\SDLImage\\": "src"
+        }
+    },
+    "require-dev": {
+        "serafim/ffi-ide-helper": "^1.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Serafim\\SDLImage\\Tests\\": "tests"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
