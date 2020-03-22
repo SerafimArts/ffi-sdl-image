@@ -7,6 +7,7 @@ This is a SDL Image bindings for PHP using [SDL php ffi bindings library](https:
     - [Linux](#linux)
     - [MacOS](#macos)
     - [Windows](#windows)
+- [API Documentation](#api)
 
 ## Requirements
 
