@@ -35,7 +35,7 @@ $ composer require serafim/ffi-sdl-image
 
 #### Windows
 
-- Binaries are already included
+- SDL Image (v2.0.5) are already bundled
 
 
 ## API
