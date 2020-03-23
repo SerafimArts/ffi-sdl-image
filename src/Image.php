@@ -45,13 +45,6 @@ final class Image implements InitFlags, ImageType
     private SDL $sdl;
 
     /**
-     * SDL Directory
-     *
-     * @var string
-     */
-    private string $sdlPath;
-
-    /**
      * SDL Image Directory
      *
      * @var string
@@ -64,9 +57,8 @@ final class Image implements InitFlags, ImageType
     public function __construct()
     {
         $this->sdl = SDL::getInstance();
-        $this->sdlPath = \dirname($this->sdl->info()->lib);
 
-        \chdir($this->sdlPath);
+        \chdir(\dirname($this->sdl->info()->lib));
 
         $this->ffi = $this->info()->ffi;
         $this->imagePath = \dirname($this->info()->lib);
