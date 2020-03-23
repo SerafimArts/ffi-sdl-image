@@ -19,7 +19,6 @@ use Serafim\SDL\Loader\LibraryInterface;
 use Serafim\SDL\RendererPtr;
 use Serafim\SDL\RWopsPtr;
 use Serafim\SDL\SDL;
-use Serafim\SDL\SDLImageNativeApiAutocomplete;
 use Serafim\SDL\Support\LoaderTrait;
 use Serafim\SDL\Support\SingletonTrait;
 use Serafim\SDL\SurfacePtr;
