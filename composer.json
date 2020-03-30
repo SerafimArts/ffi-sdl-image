@@ -23,12 +23,6 @@
             "email": "nesk@xakep.ru"
         }
     ],
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../SDL"
-        }
-    ],
     "require": {
         "php": ">=7.4",
         "ext-ffi": "*",
