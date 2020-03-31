@@ -32,7 +32,6 @@ extern int IMG_isLBM(SDL_RWops* src);
 extern int IMG_isPCX(SDL_RWops* src);
 extern int IMG_isPNG(SDL_RWops* src);
 extern int IMG_isPNM(SDL_RWops* src);
-extern int IMG_isSVG(SDL_RWops* src);
 extern int IMG_isTIF(SDL_RWops* src);
 extern int IMG_isXCF(SDL_RWops* src);
 extern int IMG_isXPM(SDL_RWops* src);
@@ -48,7 +47,6 @@ extern SDL_Surface* IMG_LoadLBM_RW(SDL_RWops* src);
 extern SDL_Surface* IMG_LoadPCX_RW(SDL_RWops* src);
 extern SDL_Surface* IMG_LoadPNG_RW(SDL_RWops* src);
 extern SDL_Surface* IMG_LoadPNM_RW(SDL_RWops* src);
-extern SDL_Surface* IMG_LoadSVG_RW(SDL_RWops* src);
 extern SDL_Surface* IMG_LoadTGA_RW(SDL_RWops* src);
 extern SDL_Surface* IMG_LoadTIF_RW(SDL_RWops* src);
 extern SDL_Surface* IMG_LoadXCF_RW(SDL_RWops* src);
@@ -60,5 +58,17 @@ extern SDL_Surface* IMG_ReadXPMFromArray(char **xpm);
 
 extern int IMG_SavePNG(SDL_Surface* surface, const char* file);
 extern int IMG_SavePNG_RW(SDL_Surface* surface, SDL_RWops* dst, int freedst);
-extern int IMG_SaveJPG(SDL_Surface* surface, const char* file, int quality);
-extern int IMG_SaveJPG_RW(SDL_Surface* surface, SDL_RWops* dst, int freedst, int quality);
+
+// =====================================================================================================================
+//   SDL Image >= 2.0.2
+//
+//   https://discourse.libsdl.org/t/sdl-image-2-0-2-released/23281
+// =====================================================================================================================
+
+#if version >= 2.0.2
+    extern int IMG_isSVG(SDL_RWops* src);
+    extern SDL_Surface* IMG_LoadSVG_RW(SDL_RWops* src);
+
+    extern int IMG_SaveJPG_RW(SDL_Surface* surface, SDL_RWops* dst, int freedst, int quality);
+    extern int IMG_SaveJPG(SDL_Surface* surface, const char* file, int quality);
+#endif

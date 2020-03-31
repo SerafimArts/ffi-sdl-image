@@ -520,6 +520,7 @@ final class Image implements InitFlags, ImageType
      *  extern int IMG_isSVG(SDL_RWops *src);
      * </code>
      *
+     * @since SDL Image 2.0.2
      * @param CData|RWopsPtr $src
      * @return bool
      */
@@ -865,6 +866,7 @@ final class Image implements InitFlags, ImageType
      *  extern SDL_Surface* IMG_LoadSVG_RW(SDL_RWops *src);
      * </code>
      *
+     * @since SDL Image 2.0.2
      * @param CData|RWopsPtr $src
      * @return SurfacePtr
      * @throws SDLImageException
@@ -1112,6 +1114,7 @@ final class Image implements InitFlags, ImageType
      *  extern int IMG_SaveJPG(SDL_Surface *surface, const char *file);
      * </code>
      *
+     * @since SDL Image 2.0.2
      * @param CData|SurfacePtr $surface
      * @param string $file
      * @param int $quality
@@ -1136,6 +1139,7 @@ final class Image implements InitFlags, ImageType
      *  extern int IMG_SaveJPG_RW(SDL_Surface *surface, SDL_RWops *dst, int freedst, int quality);
      * </code>
      *
+     * @since SDL Image 2.0.2
      * @param CData|SurfacePtr $surface
      * @param CData|RWopsPtr $dst
      * @param bool $freeDst
