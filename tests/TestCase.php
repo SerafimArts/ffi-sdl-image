@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of SDL Image package.
+ * This file is part of SDL package.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -9,13 +9,13 @@
 
 declare(strict_types=1);
 
-namespace Serafim\SDLImage;
+namespace SDL\Image\Tests;
 
-use Serafim\SDL\Exception\SDLException;
+use PHPUnit\Framework\TestCase as BaseTestCase;
 
 /**
- * Class SDLImageException
+ * Class TestCase
  */
-class SDLImageException extends SDLException
+abstract class TestCase extends BaseTestCase
 {
 }

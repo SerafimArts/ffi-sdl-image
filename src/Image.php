@@ -11,44 +11,47 @@
 
 declare(strict_types=1);
 
-namespace Serafim\SDLImage;
+namespace SDL\Image;
 
 use FFI\CCharPtrPtr;
 use FFI\CData;
-use Serafim\SDL\Loader\LibraryInterface;
-use Serafim\SDL\RendererPtr;
-use Serafim\SDL\RWopsPtr;
-use Serafim\SDL\SDL;
-use Serafim\SDL\Support\LoaderTrait;
-use Serafim\SDL\Support\SingletonTrait;
-use Serafim\SDL\SurfacePtr;
-use Serafim\SDL\TexturePtr;
-use Serafim\SDL\Version;
+use SDL\Exception\SDLException;
+use SDL\Loader\LibraryInformation;
+use SDL\Loader\LibraryLoader;
+use SDL\RendererPtr;
+use SDL\RWopsPtr;
+use SDL\SDL;
+use SDL\SDLNativeApiAutocomplete;
+use SDL\Support\ProxyTrait;
+use SDL\Support\SingletonTrait;
+use SDL\Support\VersionComparisonTrait;
+use SDL\SurfacePtr;
+use SDL\TexturePtr;
+use SDL\Version;
 
 /**
  * Class Image
  */
 final class Image implements InitFlags, ImageType
 {
-    use LoaderTrait;
+    use ProxyTrait;
     use SingletonTrait;
+    use VersionComparisonTrait;
 
     /**
-     * @var \FFI|SDLImageNativeApiAutocomplete
+     * @var LibraryInformation
+     */
+    public LibraryInformation $info;
+
+    /**
+     * @var \FFI|ImageNativeApiAutocomplete
      */
     protected \FFI $ffi;
 
     /**
-     * @var SDL
+     * @var SDL|SDLNativeApiAutocomplete
      */
     private SDL $sdl;
-
-    /**
-     * SDL Image Directory
-     *
-     * @var string
-     */
-    private string $imagePath;
 
     /**
      * Image constructor.
@@ -57,10 +60,19 @@ final class Image implements InitFlags, ImageType
     {
         $this->sdl = SDL::getInstance();
 
-        \chdir(\dirname($this->sdl->info()->lib));
+        $loader = new LibraryLoader(__DIR__ . '/../out');
+        $loader->define('__sdl_version__', $this->sdl->info->version);
 
-        $this->ffi = $this->info()->ffi;
-        $this->imagePath = \dirname($this->info()->lib);
+        $this->info = $loader->load(new Library());
+        $this->ffi = $this->info->ffi;
+    }
+
+    /**
+     * @return LibraryInformation
+     */
+    protected function getLibraryInformation(): LibraryInformation
+    {
+        return $this->info;
     }
 
     /**
@@ -73,38 +85,15 @@ final class Image implements InitFlags, ImageType
      *
      * @param int|InitFlags $flags
      * @return void
-     * @throws SDLImageException
+     * @throws SDLException
      */
     public function init(int $flags): void
     {
-        $this->chdir(function () use ($flags): void {
+        $this->info->chdir(function () use ($flags): void {
             if ($this->ffi->IMG_Init($flags) === 0) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
         });
-    }
-
-    /**
-     * @param \Closure $expr
-     * @return mixed
-     */
-    private function chdir(\Closure $expr)
-    {
-        if (\PHP_OS_FAMILY !== 'Windows') {
-            return $expr();
-        }
-
-        $before = \getcwd();
-
-        try {
-            \chdir($this->imagePath);
-
-            return $expr();
-        } finally {
-            if ($before !== false) {
-                \chdir($before);
-            }
-        }
     }
 
     /**
@@ -119,7 +108,7 @@ final class Image implements InitFlags, ImageType
      */
     public function linkedVersion(): CData
     {
-        return $this->chdir(function (): CData {
+        return $this->info->chdir(function (): CData {
             $result = $this->ffi->IMG_Linked_Version();
 
             return $this->sdl->cast('SDL_Version*', $result);
@@ -160,16 +149,16 @@ final class Image implements InitFlags, ImageType
      * @param bool $freeSrc
      * @param string $type
      * @return SurfacePtr
-     * @throws SDLImageException
+     * @throws SDLException
      */
     public function loadTypedRw(CData $src, string $type, bool $freeSrc = true): CData
     {
-        return $this->chdir(function () use ($src, $type, $freeSrc): CData {
+        return $this->info->chdir(function () use ($src, $type, $freeSrc): CData {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
             if (($result = $this->ffi->IMG_LoadTyped_RW($src, (int)$freeSrc, $type)) === null) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
 
             return $this->sdl->cast('SDL_Surface*', $result);
@@ -194,13 +183,13 @@ final class Image implements InitFlags, ImageType
      *
      * @param string $file
      * @return SurfacePtr
-     * @throws SDLImageException
+     * @throws SDLException
      */
     public function load(string $file): CData
     {
-        return $this->chdir(function () use ($file): CData {
+        return $this->info->chdir(function () use ($file): CData {
             if (($result = $this->ffi->IMG_Load($file)) === null) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
 
             return $this->sdl->cast('SDL_Surface*', $result);
@@ -219,16 +208,16 @@ final class Image implements InitFlags, ImageType
      * @param CData|RWopsPtr $src
      * @param bool $freeSrc
      * @return SurfacePtr
-     * @throws SDLImageException
+     * @throws SDLException
      */
     public function loadRw(CData $src, bool $freeSrc = true): CData
     {
-        return $this->chdir(function () use ($src, $freeSrc): CData {
+        return $this->info->chdir(function () use ($src, $freeSrc): CData {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
             if (($result = $this->ffi->IMG_Load_RW($src, (int)$freeSrc)) === null) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
 
             return $this->sdl->cast('SDL_Surface*', $result);
@@ -247,16 +236,16 @@ final class Image implements InitFlags, ImageType
      * @param CData|RendererPtr $renderer
      * @param string $file
      * @return TexturePtr
-     * @throws SDLImageException
+     * @throws SDLException
      */
     public function loadTexture(CData $renderer, string $file): CData
     {
-        return $this->chdir(function () use ($renderer, $file): CData {
+        return $this->info->chdir(function () use ($renderer, $file): CData {
             /** @var RendererPtr $renderer */
             $renderer = $this->ffi->cast('SDL_Renderer*', $renderer);
 
             if (($result = $this->ffi->IMG_LoadTexture($renderer, $file)) === null) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
 
             return $this->sdl->cast('SDL_Texture*', $result);
@@ -276,11 +265,11 @@ final class Image implements InitFlags, ImageType
      * @param CData|RWopsPtr $src
      * @param bool $freeSrc
      * @return TexturePtr
-     * @throws SDLImageException
+     * @throws SDLException
      */
     public function loadTextureRw(CData $renderer, CData $src, bool $freeSrc = true): CData
     {
-        return $this->chdir(function () use ($renderer, $src, $freeSrc): CData {
+        return $this->info->chdir(function () use ($renderer, $src, $freeSrc): CData {
             /** @var RendererPtr $renderer */
             $renderer = $this->ffi->cast('SDL_Renderer*', $renderer);
 
@@ -288,7 +277,7 @@ final class Image implements InitFlags, ImageType
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
             if (($result = $this->ffi->IMG_LoadTexture_RW($renderer, $src, (int)$freeSrc)) === null) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
 
             return $this->sdl->cast('SDL_Texture*', $result);
@@ -314,11 +303,11 @@ final class Image implements InitFlags, ImageType
      * @param string $type
      * @param bool $freeSrc
      * @return TexturePtr
-     * @throws SDLImageException
+     * @throws SDLException
      */
     public function loadTextureTypedRw(CData $renderer, CData $src, string $type, bool $freeSrc = true): CData
     {
-        return $this->chdir(function () use ($renderer, $src, $type, $freeSrc): CData {
+        return $this->info->chdir(function () use ($renderer, $src, $type, $freeSrc): CData {
             /** @var RendererPtr $renderer */
             $renderer = $this->ffi->cast('SDL_Renderer*', $renderer);
 
@@ -326,7 +315,7 @@ final class Image implements InitFlags, ImageType
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
             if (($result = $this->ffi->IMG_LoadTextureTyped_RW($renderer, $src, (int)$freeSrc, $type)) === null) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
 
             return $this->sdl->cast('SDL_Texture*', $result);
@@ -345,7 +334,7 @@ final class Image implements InitFlags, ImageType
      */
     public function isIco(CData $src): bool
     {
-        return $this->chdir(function () use ($src): bool {
+        return $this->info->chdir(function () use ($src): bool {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
@@ -365,7 +354,7 @@ final class Image implements InitFlags, ImageType
      */
     public function isCur(CData $src): bool
     {
-        return $this->chdir(function () use ($src): bool {
+        return $this->info->chdir(function () use ($src): bool {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
@@ -385,7 +374,7 @@ final class Image implements InitFlags, ImageType
      */
     public function isBmp(CData $src): bool
     {
-        return $this->chdir(function () use ($src): bool {
+        return $this->info->chdir(function () use ($src): bool {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
@@ -405,7 +394,7 @@ final class Image implements InitFlags, ImageType
      */
     public function isGif(CData $src): bool
     {
-        return $this->chdir(function () use ($src): bool {
+        return $this->info->chdir(function () use ($src): bool {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
@@ -425,7 +414,7 @@ final class Image implements InitFlags, ImageType
      */
     public function isJpg(CData $src): bool
     {
-        return $this->chdir(function () use ($src): bool {
+        return $this->info->chdir(function () use ($src): bool {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
@@ -445,7 +434,7 @@ final class Image implements InitFlags, ImageType
      */
     public function isLbm(CData $src): bool
     {
-        return $this->chdir(function () use ($src): bool {
+        return $this->info->chdir(function () use ($src): bool {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
@@ -465,7 +454,7 @@ final class Image implements InitFlags, ImageType
      */
     public function isPcx(CData $src): bool
     {
-        return $this->chdir(function () use ($src): bool {
+        return $this->info->chdir(function () use ($src): bool {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
@@ -485,7 +474,7 @@ final class Image implements InitFlags, ImageType
      */
     public function isPng(CData $src): bool
     {
-        return $this->chdir(function () use ($src): bool {
+        return $this->info->chdir(function () use ($src): bool {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
@@ -505,7 +494,7 @@ final class Image implements InitFlags, ImageType
      */
     public function isPnm(CData $src): bool
     {
-        return $this->chdir(function () use ($src): bool {
+        return $this->info->chdir(function () use ($src): bool {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
@@ -520,13 +509,15 @@ final class Image implements InitFlags, ImageType
      *  extern int IMG_isSVG(SDL_RWops *src);
      * </code>
      *
-     * @since SDL Image 2.0.2
      * @param CData|RWopsPtr $src
      * @return bool
+     * @since SDL Image 2.0.2
      */
     public function isSvg(CData $src): bool
     {
-        return $this->chdir(function () use ($src): bool {
+        $this->assertVersion('2.0.2');
+
+        return $this->info->chdir(function () use ($src): bool {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
@@ -546,7 +537,7 @@ final class Image implements InitFlags, ImageType
      */
     public function isTif(CData $src): bool
     {
-        return $this->chdir(function () use ($src): bool {
+        return $this->info->chdir(function () use ($src): bool {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
@@ -566,7 +557,7 @@ final class Image implements InitFlags, ImageType
      */
     public function isXcf(CData $src): bool
     {
-        return $this->chdir(function () use ($src): bool {
+        return $this->info->chdir(function () use ($src): bool {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
@@ -586,7 +577,7 @@ final class Image implements InitFlags, ImageType
      */
     public function isXpm(CData $src): bool
     {
-        return $this->chdir(function () use ($src): bool {
+        return $this->info->chdir(function () use ($src): bool {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
@@ -606,7 +597,7 @@ final class Image implements InitFlags, ImageType
      */
     public function isXv(CData $src): bool
     {
-        return $this->chdir(function () use ($src): bool {
+        return $this->info->chdir(function () use ($src): bool {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
@@ -626,7 +617,7 @@ final class Image implements InitFlags, ImageType
      */
     public function isWebp(CData $src): bool
     {
-        return $this->chdir(function () use ($src): bool {
+        return $this->info->chdir(function () use ($src): bool {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
@@ -643,16 +634,16 @@ final class Image implements InitFlags, ImageType
      *
      * @param CData|RWopsPtr $src
      * @return SurfacePtr
-     * @throws SDLImageException
+     * @throws SDLException
      */
     public function loadIcoRw(CData $src): CData
     {
-        return $this->chdir(function () use ($src): CData {
+        return $this->info->chdir(function () use ($src): CData {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
             if (($result = $this->ffi->IMG_LoadICO_RW($src)) === null) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
 
             return $this->sdl->cast('SDL_Surface*', $result);
@@ -668,16 +659,16 @@ final class Image implements InitFlags, ImageType
      *
      * @param CData|RWopsPtr $src
      * @return SurfacePtr
-     * @throws SDLImageException
+     * @throws SDLException
      */
     public function loadCurRw(CData $src): CData
     {
-        return $this->chdir(function () use ($src): CData {
+        return $this->info->chdir(function () use ($src): CData {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
             if (($result = $this->ffi->IMG_LoadCUR_RW($src)) === null) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
 
             return $this->sdl->cast('SDL_Surface*', $result);
@@ -693,16 +684,16 @@ final class Image implements InitFlags, ImageType
      *
      * @param CData|RWopsPtr $src
      * @return SurfacePtr
-     * @throws SDLImageException
+     * @throws SDLException
      */
     public function loadBmpRw(CData $src): CData
     {
-        return $this->chdir(function () use ($src): CData {
+        return $this->info->chdir(function () use ($src): CData {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
             if (($result = $this->ffi->IMG_LoadBMP_RW($src)) === null) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
 
             return $this->sdl->cast('SDL_Surface*', $result);
@@ -718,16 +709,16 @@ final class Image implements InitFlags, ImageType
      *
      * @param CData|RWopsPtr $src
      * @return SurfacePtr
-     * @throws SDLImageException
+     * @throws SDLException
      */
     public function loadGifRw(CData $src): CData
     {
-        return $this->chdir(function () use ($src): CData {
+        return $this->info->chdir(function () use ($src): CData {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
             if (($result = $this->ffi->IMG_LoadGIF_RW($src)) === null) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
 
             return $this->sdl->cast('SDL_Surface*', $result);
@@ -743,16 +734,16 @@ final class Image implements InitFlags, ImageType
      *
      * @param CData|RWopsPtr $src
      * @return SurfacePtr
-     * @throws SDLImageException
+     * @throws SDLException
      */
     public function loadJpgRw(CData $src): CData
     {
-        return $this->chdir(function () use ($src): CData {
+        return $this->info->chdir(function () use ($src): CData {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
             if (($result = $this->ffi->IMG_LoadJPG_RW($src)) === null) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
 
             return $this->sdl->cast('SDL_Surface*', $result);
@@ -768,16 +759,16 @@ final class Image implements InitFlags, ImageType
      *
      * @param CData|RWopsPtr $src
      * @return SurfacePtr
-     * @throws SDLImageException
+     * @throws SDLException
      */
     public function loadLbmRw(CData $src): CData
     {
-        return $this->chdir(function () use ($src): CData {
+        return $this->info->chdir(function () use ($src): CData {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
             if (($result = $this->ffi->IMG_LoadLBM_RW($src)) === null) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
 
             return $this->sdl->cast('SDL_Surface*', $result);
@@ -793,16 +784,16 @@ final class Image implements InitFlags, ImageType
      *
      * @param CData|RWopsPtr $src
      * @return SurfacePtr
-     * @throws SDLImageException
+     * @throws SDLException
      */
     public function loadPcxRw(CData $src): CData
     {
-        return $this->chdir(function () use ($src): CData {
+        return $this->info->chdir(function () use ($src): CData {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
             if (($result = $this->ffi->IMG_LoadPCX_RW($src)) === null) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
 
             return $this->sdl->cast('SDL_Surface*', $result);
@@ -818,16 +809,16 @@ final class Image implements InitFlags, ImageType
      *
      * @param CData|RWopsPtr $src
      * @return SurfacePtr
-     * @throws SDLImageException
+     * @throws SDLException
      */
     public function loadPngRw(CData $src): CData
     {
-        return $this->chdir(function () use ($src): CData {
+        return $this->info->chdir(function () use ($src): CData {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
             if (($result = $this->ffi->IMG_LoadPNG_RW($src)) === null) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
 
             return $this->sdl->cast('SDL_Surface*', $result);
@@ -843,16 +834,16 @@ final class Image implements InitFlags, ImageType
      *
      * @param CData|RWopsPtr $src
      * @return SurfacePtr
-     * @throws SDLImageException
+     * @throws SDLException
      */
     public function loadPnmRw(CData $src): CData
     {
-        return $this->chdir(function () use ($src): CData {
+        return $this->info->chdir(function () use ($src): CData {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
             if (($result = $this->ffi->IMG_LoadPNM_RW($src)) === null) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
 
             return $this->sdl->cast('SDL_Surface*', $result);
@@ -866,19 +857,21 @@ final class Image implements InitFlags, ImageType
      *  extern SDL_Surface* IMG_LoadSVG_RW(SDL_RWops *src);
      * </code>
      *
-     * @since SDL Image 2.0.2
      * @param CData|RWopsPtr $src
      * @return SurfacePtr
-     * @throws SDLImageException
+     * @throws SDLException
+     * @since SDL Image 2.0.2
      */
     public function loadSvgRw(CData $src): CData
     {
-        return $this->chdir(function () use ($src): CData {
+        $this->assertVersion('2.0.2');
+
+        return $this->info->chdir(function () use ($src): CData {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
             if (($result = $this->ffi->IMG_LoadSVG_RW($src)) === null) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
 
             return $this->sdl->cast('SDL_Surface*', $result);
@@ -894,16 +887,16 @@ final class Image implements InitFlags, ImageType
      *
      * @param CData|RWopsPtr $src
      * @return SurfacePtr
-     * @throws SDLImageException
+     * @throws SDLException
      */
     public function loadTgaRw(CData $src): CData
     {
-        return $this->chdir(function () use ($src): CData {
+        return $this->info->chdir(function () use ($src): CData {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
             if (($result = $this->ffi->IMG_LoadTGA_RW($src)) === null) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
 
             return $this->sdl->cast('SDL_Surface*', $result);
@@ -919,16 +912,16 @@ final class Image implements InitFlags, ImageType
      *
      * @param CData|RWopsPtr $src
      * @return SurfacePtr
-     * @throws SDLImageException
+     * @throws SDLException
      */
     public function loadTifRw(CData $src): CData
     {
-        return $this->chdir(function () use ($src): CData {
+        return $this->info->chdir(function () use ($src): CData {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
             if (($result = $this->ffi->IMG_LoadTIF_RW($src)) === null) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
 
             return $this->sdl->cast('SDL_Surface*', $result);
@@ -944,16 +937,16 @@ final class Image implements InitFlags, ImageType
      *
      * @param CData|RWopsPtr $src
      * @return SurfacePtr
-     * @throws SDLImageException
+     * @throws SDLException
      */
     public function loadXcfRw(CData $src): CData
     {
-        return $this->chdir(function () use ($src): CData {
+        return $this->info->chdir(function () use ($src): CData {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
             if (($result = $this->ffi->IMG_LoadXCF_RW($src)) === null) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
 
             return $this->sdl->cast('SDL_Surface*', $result);
@@ -969,16 +962,16 @@ final class Image implements InitFlags, ImageType
      *
      * @param CData|RWopsPtr $src
      * @return SurfacePtr
-     * @throws SDLImageException
+     * @throws SDLException
      */
     public function loadXpmRw(CData $src): CData
     {
-        return $this->chdir(function () use ($src): CData {
+        return $this->info->chdir(function () use ($src): CData {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
             if (($result = $this->ffi->IMG_LoadXPM_RW($src)) === null) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
 
             return $this->sdl->cast('SDL_Surface*', $result);
@@ -994,16 +987,16 @@ final class Image implements InitFlags, ImageType
      *
      * @param CData|RWopsPtr $src
      * @return SurfacePtr
-     * @throws SDLImageException
+     * @throws SDLException
      */
     public function loadXvRw(CData $src): CData
     {
-        return $this->chdir(function () use ($src): CData {
+        return $this->info->chdir(function () use ($src): CData {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
             if (($result = $this->ffi->IMG_LoadXV_RW($src)) === null) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
 
             return $this->sdl->cast('SDL_Surface*', $result);
@@ -1019,16 +1012,16 @@ final class Image implements InitFlags, ImageType
      *
      * @param CData|RWopsPtr $src
      * @return SurfacePtr
-     * @throws SDLImageException
+     * @throws SDLException
      */
     public function loadWebpRw(CData $src): CData
     {
-        return $this->chdir(function () use ($src): CData {
+        return $this->info->chdir(function () use ($src): CData {
             /** @var RWopsPtr $src */
             $src = $this->ffi->cast('SDL_RWops*', $src);
 
             if (($result = $this->ffi->IMG_LoadWEBP_RW($src)) === null) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
 
             return $this->sdl->cast('SDL_Surface*', $result);
@@ -1045,11 +1038,11 @@ final class Image implements InitFlags, ImageType
      *
      * @param string|CData|CCharPtrPtr $xpm
      * @return SurfacePtr
-     * @throws SDLImageException
+     * @throws SDLException
      */
     public function readXpmFromArray(CData $xpm): CData
     {
-        return $this->chdir(function () use ($xpm): CData {
+        return $this->info->chdir(function () use ($xpm): CData {
             $result = $this->ffi->IMG_ReadXPMFromArray($xpm);
 
             return $this->sdl->cast('SDL_Surface*', $result);
@@ -1069,12 +1062,12 @@ final class Image implements InitFlags, ImageType
      */
     public function savePng(CData $surface, string $file): void
     {
-        $this->chdir(function () use ($surface, $file): void {
+        $this->info->chdir(function () use ($surface, $file): void {
             /** @var SurfacePtr $surface */
             $surface = $this->ffi->cast('SDL_Surface*', $surface);
 
             if ($this->ffi->IMG_SavePNG($surface, $file) !== 0) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
         });
     }
@@ -1090,11 +1083,11 @@ final class Image implements InitFlags, ImageType
      * @param CData|RWopsPtr $dst
      * @param bool $freeDst
      * @return void
-     * @throws SDLImageException
+     * @throws SDLException
      */
     public function savePngRw(CData $surface, CData $dst, bool $freeDst = true): void
     {
-        $this->chdir(function () use ($surface, $dst, $freeDst): void {
+        $this->info->chdir(function () use ($surface, $dst, $freeDst): void {
             /** @var SurfacePtr $surface */
             $surface = $this->ffi->cast('SDL_Surface*', $surface);
 
@@ -1102,7 +1095,7 @@ final class Image implements InitFlags, ImageType
             $dst = $this->ffi->cast('SDL_RWops*', $dst);
 
             if ($this->ffi->IMG_SavePNG_RW($surface, $dst, (int)$freeDst) !== 0) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
         });
     }
@@ -1114,20 +1107,22 @@ final class Image implements InitFlags, ImageType
      *  extern int IMG_SaveJPG(SDL_Surface *surface, const char *file);
      * </code>
      *
-     * @since SDL Image 2.0.2
      * @param CData|SurfacePtr $surface
      * @param string $file
      * @param int $quality
      * @return void
+     * @since SDL Image 2.0.2
      */
     public function saveJpg(CData $surface, string $file, int $quality = 100): void
     {
-        $this->chdir(function () use ($surface, $file, $quality): void {
+        $this->assertVersion('2.0.2');
+
+        $this->info->chdir(function () use ($surface, $file, $quality): void {
             /** @var SurfacePtr $surface */
             $surface = $this->ffi->cast('SDL_Surface*', $surface);
 
             if ($this->ffi->IMG_SaveJPG($surface, $file, $quality) !== 0) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
         });
     }
@@ -1139,16 +1134,18 @@ final class Image implements InitFlags, ImageType
      *  extern int IMG_SaveJPG_RW(SDL_Surface *surface, SDL_RWops *dst, int freedst, int quality);
      * </code>
      *
-     * @since SDL Image 2.0.2
      * @param CData|SurfacePtr $surface
      * @param CData|RWopsPtr $dst
      * @param bool $freeDst
      * @param int $quality
      * @return void
+     * @since SDL Image 2.0.2
      */
     public function saveJpgRw(CData $surface, CData $dst, bool $freeDst = true, int $quality = 100): void
     {
-        $this->chdir(function () use ($surface, $dst, $freeDst, $quality): void {
+        $this->assertVersion('2.0.2');
+
+        $this->info->chdir(function () use ($surface, $dst, $freeDst, $quality): void {
             /** @var SurfacePtr $surface */
             $surface = $this->ffi->cast('SDL_Surface*', $surface);
 
@@ -1156,24 +1153,8 @@ final class Image implements InitFlags, ImageType
             $dst = $this->ffi->cast('SDL_RWops*', $dst);
 
             if ($this->ffi->IMG_SaveJPG_RW($surface, $dst, (int)$freeDst, $quality) !== 0) {
-                throw new SDLImageException($this->sdl->getError());
+                throw new SDLException($this->sdl->SDL_GetError());
             }
         });
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function getLibrary(): LibraryInterface
-    {
-        return new Library();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function getOutputPath(): string
-    {
-        return __DIR__ . '/../out';
     }
 }

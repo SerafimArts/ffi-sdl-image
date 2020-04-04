@@ -7,6 +7,12 @@
         "issues": "https://github.com/SerafimArts/ffi-sdl-image/issues",
         "source": "https://github.com/SerafimArts/ffi-sdl-image"
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../SDL"
+        }
+    ],
     "keywords": [
         "sdl",
         "ffi",
@@ -30,15 +36,17 @@
     },
     "autoload": {
         "psr-4": {
-            "Serafim\\SDLImage\\": "src"
+            "SDL\\Image\\": "src"
         }
     },
     "require-dev": {
-        "serafim/ffi-ide-helper": "^1.0"
+        "serafim/ffi-ide-helper": "^1.0",
+        "phpunit/phpunit": "~9.0",
+        "symfony/var-dumper": "~5.0"
     },
     "autoload-dev": {
         "psr-4": {
-            "Serafim\\SDLImage\\Tests\\": "tests"
+            "SDL\\Image\\Tests\\": "tests"
         }
     },
     "config": {

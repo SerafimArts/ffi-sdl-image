@@ -9,11 +9,11 @@
 
 declare(strict_types=1);
 
-namespace Serafim\SDLImage;
+namespace SDL\Image;
 
-use Serafim\SDL\Loader\BitDepth;
-use Serafim\SDL\Loader\LibraryInterface;
-use Serafim\SDL\Loader\OperatingSystem;
+use SDL\Loader\BitDepth;
+use SDL\Loader\LibraryInterface;
+use SDL\Loader\OperatingSystem;
 
 /**
  * Class Library

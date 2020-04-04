@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Serafim\SDLImage;
+namespace SDL\Image;
 
 /**
  * Interface InitFlags

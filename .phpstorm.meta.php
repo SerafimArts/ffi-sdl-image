@@ -72,7 +72,7 @@ namespace PHPSTORM_META {
         "char **",
     );
 
-    override(\Serafim\SDLImage\Image::new(), map([
+    override(\SDL\Image\Image::new(), map([
         ''         => type(0),
         // mixed
         "void *"   => \FFI\CScalar::class,
@@ -138,10 +138,11 @@ namespace PHPSTORM_META {
         "char **"    => \FFI\CStringPtrPtr::class,
     ]));
 
-    override(\Serafim\SDLImage\Image::addr(), map([
+    override(\SDL\Image\Image::addr(), map([
         '' => '@Ptr',
     ]));
 
-    expectedArguments(\Serafim\SDLImage\Image::new(), 0, argumentsSet('ffiCType'));
-    expectedArguments(\Serafim\SDLImage\Image::cast(), 0, argumentsSet('ffiCType'));
+    expectedArguments(\SDL\Image\Image::new(), 0, argumentsSet('ffiCType'));
+
+    expectedArguments(\SDL\Image\Image::cast(), 0, argumentsSet('ffiCType'));
 }

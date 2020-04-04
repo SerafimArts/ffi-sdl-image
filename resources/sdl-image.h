@@ -65,7 +65,7 @@ extern int IMG_SavePNG_RW(SDL_Surface* surface, SDL_RWops* dst, int freedst);
 //   https://discourse.libsdl.org/t/sdl-image-2-0-2-released/23281
 // =====================================================================================================================
 
-#if version >= 2.0.2
+#if __sdl_image_version__ >= 2.0.2
     extern int IMG_isSVG(SDL_RWops* src);
     extern SDL_Surface* IMG_LoadSVG_RW(SDL_RWops* src);
 

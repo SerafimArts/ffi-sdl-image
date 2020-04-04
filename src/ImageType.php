@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace Serafim\SDLImage;
+namespace SDL\Image;
 
 /**
  * @see https://www.libsdl.org/projects/SDL_image/docs/SDL_image_13.html#SEC13

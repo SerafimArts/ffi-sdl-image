@@ -11,15 +11,15 @@
 
 declare(strict_types=1);
 
-namespace Serafim\SDLImage;
+namespace SDL\Image;
 
 use FFI\CCharPtr;
 use FFI\CCharPtrPtr;
-use Serafim\SDL\RendererPtr;
-use Serafim\SDL\RWopsPtr;
-use Serafim\SDL\SurfacePtr;
-use Serafim\SDL\TexturePtr;
-use Serafim\SDL\VersionPtr;
+use SDL\RendererPtr;
+use SDL\RWopsPtr;
+use SDL\SurfacePtr;
+use SDL\TexturePtr;
+use SDL\VersionPtr;
 
 /**
  * @formatter:off
@@ -70,7 +70,7 @@ use Serafim\SDL\VersionPtr;
  * @method int IMG_SaveJPG_RW(SurfacePtr $surface, RWopsPtr $dst, int $freedst, int $quality)
  * @formatter:on
  */
-interface SDLImageNativeApiAutocomplete
+interface ImageNativeApiAutocomplete
 {
 
 }
