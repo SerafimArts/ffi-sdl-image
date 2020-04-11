@@ -21,6 +21,7 @@ use Serafim\SDL\RendererPtr;
 use Serafim\SDL\RWopsPtr;
 use Serafim\SDL\SDL;
 use Serafim\SDL\SDLNativeApiAutocomplete;
+use Serafim\SDL\Support\ProxyTrait;
 use Serafim\SDL\Support\SingletonTrait;
 use Serafim\SDL\Support\VersionComparisonTrait;
 use Serafim\SDL\SurfacePtr;
@@ -32,6 +33,7 @@ use Serafim\SDL\Version;
  */
 final class Image implements InitFlags, ImageType
 {
+    use ProxyTrait;
     use SingletonTrait;
     use VersionComparisonTrait;
 
@@ -1142,13 +1144,5 @@ final class Image implements InitFlags, ImageType
                 throw new SDLException($this->sdl->SDL_GetError());
             }
         });
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function __call(string $name, array $arguments)
-    {
-        return $this->info->ffi->$name(...$arguments);
     }
 }
