@@ -70,14 +70,6 @@ class Library extends BaseLibrary
     /**
      * @return string
      */
-    public function getOutputDirectory(): string
-    {
-        return __DIR__ . '/../out';
-    }
-
-    /**
-     * @return string
-     */
     public function getHeaders(): string
     {
         return __DIR__ . '/../resources/sdl-image.h';
