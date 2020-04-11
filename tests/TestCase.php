@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace SDL\Image\Tests;
+namespace Serafim\SDL\Image\Tests;
 
 use PHPUnit\Framework\TestCase as BaseTestCase;
 

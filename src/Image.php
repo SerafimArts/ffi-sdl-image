@@ -11,30 +11,27 @@
 
 declare(strict_types=1);
 
-namespace SDL\Image;
+namespace Serafim\SDL\Image;
 
 use FFI\CCharPtrPtr;
 use FFI\CData;
-use SDL\Exception\SDLException;
-use SDL\Loader\LibraryInformation;
-use SDL\Loader\LibraryLoader;
-use SDL\RendererPtr;
-use SDL\RWopsPtr;
-use SDL\SDL;
-use SDL\SDLNativeApiAutocomplete;
-use SDL\Support\ProxyTrait;
-use SDL\Support\SingletonTrait;
-use SDL\Support\VersionComparisonTrait;
-use SDL\SurfacePtr;
-use SDL\TexturePtr;
-use SDL\Version;
+use Serafim\FFILoader\LibraryInformation;
+use Serafim\SDL\Exception\SDLException;
+use Serafim\SDL\RendererPtr;
+use Serafim\SDL\RWopsPtr;
+use Serafim\SDL\SDL;
+use Serafim\SDL\SDLNativeApiAutocomplete;
+use Serafim\SDL\Support\SingletonTrait;
+use Serafim\SDL\Support\VersionComparisonTrait;
+use Serafim\SDL\SurfacePtr;
+use Serafim\SDL\TexturePtr;
+use Serafim\SDL\Version;
 
 /**
  * Class Image
  */
 final class Image implements InitFlags, ImageType
 {
-    use ProxyTrait;
     use SingletonTrait;
     use VersionComparisonTrait;
 
@@ -46,7 +43,7 @@ final class Image implements InitFlags, ImageType
     /**
      * @var \FFI|ImageNativeApiAutocomplete
      */
-    protected \FFI $ffi;
+    private \FFI $ffi;
 
     /**
      * @var SDL|SDLNativeApiAutocomplete
@@ -60,19 +57,8 @@ final class Image implements InitFlags, ImageType
     {
         $this->sdl = SDL::getInstance();
 
-        $loader = new LibraryLoader(__DIR__ . '/../out');
-        $loader->define('__sdl_version__', $this->sdl->info->version);
-
-        $this->info = $loader->load(new Library());
+        $this->info = $this->sdl->loadLibrary(new Library());
         $this->ffi = $this->info->ffi;
-    }
-
-    /**
-     * @return LibraryInformation
-     */
-    protected function getLibraryInformation(): LibraryInformation
-    {
-        return $this->info;
     }
 
     /**
@@ -1156,5 +1142,13 @@ final class Image implements InitFlags, ImageType
                 throw new SDLException($this->sdl->SDL_GetError());
             }
         });
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __call(string $name, array $arguments)
+    {
+        return $this->info->ffi->$name(...$arguments);
     }
 }

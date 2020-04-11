@@ -9,16 +9,16 @@
 
 declare(strict_types=1);
 
-namespace SDL\Image;
+namespace Serafim\SDL\Image;
 
-use SDL\Loader\BitDepth;
-use SDL\Loader\LibraryInterface;
-use SDL\Loader\OperatingSystem;
+use Serafim\FFILoader\BitDepth;
+use Serafim\FFILoader\Library as BaseLibrary;
+use Serafim\FFILoader\OperatingSystem;
 
 /**
  * Class Library
  */
-class Library implements LibraryInterface
+class Library extends BaseLibrary
 {
     /**
      * @var string
@@ -65,6 +65,14 @@ class Library implements LibraryInterface
     public function getName(): string
     {
         return 'SDL Image';
+    }
+
+    /**
+     * @return string
+     */
+    public function getOutputDirectory(): string
+    {
+        return __DIR__ . '/../out';
     }
 
     /**

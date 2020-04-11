@@ -138,11 +138,11 @@ namespace PHPSTORM_META {
         "char **"    => \FFI\CStringPtrPtr::class,
     ]));
 
-    override(\SDL\Image\Image::addr(), map([
+    override(\Serafim\SDL\Image\Image::addr(), map([
         '' => '@Ptr',
     ]));
 
-    expectedArguments(\SDL\Image\Image::new(), 0, argumentsSet('ffiCType'));
+    expectedArguments(\Serafim\SDL\Image\Image::new(), 0, argumentsSet('ffiCType'));
 
-    expectedArguments(\SDL\Image\Image::cast(), 0, argumentsSet('ffiCType'));
+    expectedArguments(\Serafim\SDL\Image\Image::cast(), 0, argumentsSet('ffiCType'));
 }

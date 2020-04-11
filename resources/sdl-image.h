@@ -2,8 +2,6 @@
 #define FFI_SCOPE "sdl-image"
 
 #include "sdl-types.h"
-#include "sdl-image-types.h"
-
 
 // =====================================================================================================================
 //  Function Definitions

@@ -11,15 +11,15 @@
 
 declare(strict_types=1);
 
-namespace SDL\Image;
+namespace Serafim\SDL\Image;
 
 use FFI\CCharPtr;
 use FFI\CCharPtrPtr;
-use SDL\RendererPtr;
-use SDL\RWopsPtr;
-use SDL\SurfacePtr;
-use SDL\TexturePtr;
-use SDL\VersionPtr;
+use Serafim\SDL\RendererPtr;
+use Serafim\SDL\RWopsPtr;
+use Serafim\SDL\SurfacePtr;
+use Serafim\SDL\TexturePtr;
+use Serafim\SDL\VersionPtr;
 
 /**
  * @formatter:off
