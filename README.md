@@ -47,8 +47,8 @@ The library API completely supports and repeats the analogue in the C language.
 To support autocomplete, please add a link to `\SDL\Image\ImageNativeApiAutocomplete`:
 
 ```php
-/** @var \SDL\Image\ImageNativeApiAutocomplete $image */
-$image = new \SDL\Image\Image();
+/** @var \Serafim\SDL\Image\ImageNativeApiAutocomplete $image */
+$image = new \Serafim\SDL\Image\Image();
 ```
 
 In addition, the library contains functionality adapted for PHP.
@@ -62,15 +62,14 @@ Please note that when using the original calls, you will have to cast the
 types to the desired ones with your hands!
 
 ```php
-/** @var \SDL\Image\ImageNativeApiAutocomplete $image */
-$image = new \SDL\Image\Image();
+/** @var \Serafim\SDL\Image\ImageNativeApiAutocomplete $image */
+$image = new \Serafim\SDL\Image\Image();
 
 $surface = $image->IMG_Load(__DIR__ . '/path/to/image');
 
-/** @var \SDL\SDL|\SDL\SDLNativeApiAutocomplete $sdl */
-$sdl = new \SDL\SDL();
+$sdl = new \Serafim\SDL\SDL();
 
-$sdlSurface = $sdl->cast(\SDL\SurfacePtr::class, $surface); // <<<<< HERE
+$sdlSurface = $sdl->cast(\Serafim\SDL\SurfacePtr::class, $surface); // <<<<< HERE
 $sdl->SDL_FreeSurface($sdlSurface);
 ```
 
@@ -82,7 +81,7 @@ Flags should be one or more flags from `\Serafim\SDL\InitFlags` OR'd together.
 Throws SDLException on error.
 
 ```php
-use SDL\Image\Image;
+use Serafim\SDL\Image\Image;
 
 $image = new Image();
 $image->init(Image::IMG_INIT_JPG | Image::IMG_INIT_PNG);
@@ -109,14 +108,14 @@ Unloads libraries loaded with `$image->init(...)`
 ### loadTypedRw
 
 Load an image from an SDL data source.
-The 'type' may be one of: "BMP", "GIF", "PNG", etc (see `\SDL\Image\ImageType`)
+The 'type' may be one of: "BMP", "GIF", "PNG", etc (see `\Serafim\SDL\Image\ImageType`)
 
 If the image format supports a transparent pixel, SDL will set the
 colorkey for the surface.
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $jpg = $sdl->SDL_RWFromFile('path/to/file/a.jpg', 'rb');
@@ -149,8 +148,8 @@ Don't forget to `$sdl->freeSurface(...)` the returned surface pointer when you
 are through with it.
 
 ```php
-$sdl = new \SDL\SDL();
-$image = new \SDL\Image\Image();
+$sdl = new \Serafim\SDL\SDL();
+$image = new \Serafim\SDL\Image\Image();
 
 $surface = $image->load(__DIR__ . '/path/to/file.png');
 
@@ -166,11 +165,11 @@ except TGA. Using `RWops` is not covered here, but they enable you
 to load from almost any source.
 
 ```php
-$sdl = new \SDL\SDL();
+$sdl = new \Serafim\SDL\SDL();
 $jpg = $sdl->SDL_RWFromFile('path/to/file/a.jpg', 'rb');
 
 
-$image = new \SDL\Image\Image();
+$image = new \Serafim\SDL\Image\Image();
 
 // Free "$jpg" resource after reading
 $image->loadRw($jpg);
@@ -184,7 +183,7 @@ $image->loadRw($jpg, false);
 Load an image directly into a render texture.
 
 ```php
-$image = new \SDL\Image\Image();
+$image = new \Serafim\SDL\Image\Image();
 
 // Where $renderer is an instance of \Serafim\SDL\RendererPtr
 $image->loadTexture($renderer, __DIR__ . '/path/to/file.png');
@@ -195,10 +194,10 @@ $image->loadTexture($renderer, __DIR__ . '/path/to/file.png');
 Load an image directly into a render texture.
 
 ```php
-$sdl = new \SDL\SDL();
+$sdl = new \Serafim\SDL\SDL();
 $jpg = $sdl->SDL_RWFromFile('path/to/file/a.jpg', 'rb');
 
-$image = new \SDL\Image\Image();
+$image = new \Serafim\SDL\Image\Image();
 
 // Where $renderer is an instance of \Serafim\SDL\RendererPtr
 // Free "$jpg" resource after reading
@@ -213,8 +212,8 @@ $image->loadTextureRw($renderer, $jpg, false);
 ### loadTextureTypedRw
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $jpg = $sdl->SDL_RWFromFile('path/to/file/a.jpg', 'rb');
@@ -235,8 +234,8 @@ $image->loadTextureTypedRw($renderer, $jpg, Image::IMAGE_TYPE_JPG, false);
 Functions to detect a file type, given a seekable source.
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -251,8 +250,8 @@ var_dump($image->isIco($file));
 Functions to detect a file type, given a seekable source.
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -267,8 +266,8 @@ var_dump($image->isCur($file));
 Functions to detect a file type, given a seekable source.
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -283,8 +282,8 @@ var_dump($image->isBmp($file));
 Functions to detect a file type, given a seekable source.
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -299,8 +298,8 @@ var_dump($image->isGif($file));
 Functions to detect a file type, given a seekable source.
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -315,8 +314,8 @@ var_dump($image->isJpg($file));
 Functions to detect a file type, given a seekable source.
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -331,8 +330,8 @@ var_dump($image->isLbm($file));
 Functions to detect a file type, given a seekable source.
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -347,8 +346,8 @@ var_dump($image->isPcx($file));
 Functions to detect a file type, given a seekable source.
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -363,8 +362,8 @@ var_dump($image->isPng($file));
 Functions to detect a file type, given a seekable source.
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -379,8 +378,8 @@ var_dump($image->isPnm($file));
 Functions to detect a file type, given a seekable source.
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -395,8 +394,8 @@ var_dump($image->isSvg($file));
 Functions to detect a file type, given a seekable source.
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -411,8 +410,8 @@ var_dump($image->isTif($file));
 Functions to detect a file type, given a seekable source.
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -427,8 +426,8 @@ var_dump($image->isXcf($file));
 Functions to detect a file type, given a seekable source.
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -443,8 +442,8 @@ var_dump($image->isXpm($file));
 Functions to detect a file type, given a seekable source.
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -459,8 +458,8 @@ var_dump($image->isXv($file));
 Functions to detect a file type, given a seekable source.
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -475,8 +474,8 @@ var_dump($image->isWebp($file));
 Individual loading function
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -489,8 +488,8 @@ $surface = $image->loadIcoRw($sdl->SDL_RWFromFile('path/to/file', 'rb'));
 Individual loading function
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -503,8 +502,8 @@ $surface = $image->loadCurRw($sdl->SDL_RWFromFile('path/to/file', 'rb'));
 Individual loading function
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -517,8 +516,8 @@ $surface = $image->loadBmpRw($sdl->SDL_RWFromFile('path/to/file', 'rb'));
 Individual loading function
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -531,8 +530,8 @@ $surface = $image->loadGifRw($sdl->SDL_RWFromFile('path/to/file', 'rb'));
 Individual loading function
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -545,8 +544,8 @@ $surface = $image->loadJpgRw($sdl->SDL_RWFromFile('path/to/file', 'rb'));
 Individual loading function
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -559,8 +558,8 @@ $surface = $image->loadLbmRw($sdl->SDL_RWFromFile('path/to/file', 'rb'));
 Individual loading function
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -573,8 +572,8 @@ $surface = $image->loadPcxRw($sdl->SDL_RWFromFile('path/to/file', 'rb'));
 Individual loading function
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -587,8 +586,8 @@ $surface = $image->loadPngRw($sdl->SDL_RWFromFile('path/to/file', 'rb'));
 Individual loading function
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -601,8 +600,8 @@ $surface = $image->loadPnmRw($sdl->SDL_RWFromFile('path/to/file', 'rb'));
 Individual loading function
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -615,8 +614,8 @@ $surface = $image->loadSvgRw($sdl->SDL_RWFromFile('path/to/file', 'rb'));
 Individual loading function
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -629,8 +628,8 @@ $surface = $image->loadTgaRw($sdl->SDL_RWFromFile('path/to/file', 'rb'));
 Individual loading function
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -643,8 +642,8 @@ $surface = $image->loadTifRw($sdl->SDL_RWFromFile('path/to/file', 'rb'));
 Individual loading function
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -657,8 +656,8 @@ $surface = $image->loadXcfRw($sdl->SDL_RWFromFile('path/to/file', 'rb'));
 Individual loading function
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -671,8 +670,8 @@ $surface = $image->loadXpmRw($sdl->SDL_RWFromFile('path/to/file', 'rb'));
 Individual loading function
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -685,8 +684,8 @@ $surface = $image->loadXvRw($sdl->SDL_RWFromFile('path/to/file', 'rb'));
 Individual loading function
 
 ```php
-use SDL\SDL;
-use SDL\Image\Image;
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
 
 $sdl = new SDL();
 $image = new Image();
@@ -703,7 +702,7 @@ $surface = $image->loadWebpRw($sdl->SDL_RWFromFile('path/to/file', 'rb'));
 Individual saving function
 
 ```php
-$image = new \SDL\Image\Image();
+$image = new \Serafim\SDL\Image\Image();
 
 $surface = $image->load(__DIR__ . '/path/to/file.jpg');
 
@@ -715,8 +714,8 @@ $image->savePng($surface, __DIR__ . '/path/to/output.png');
 Individual saving function
 
 ```php
-$sdl = new \SDL\SDL();
-$image = new \SDL\Image\Image();
+$sdl = new \Serafim\SDL\SDL();
+$image = new \Serafim\SDL\Image\Image();
 
 $surface = $image->load(__DIR__ . '/path/to/file.jpg');
 
@@ -728,7 +727,7 @@ $image->savePngRw($surface, $sdl->SDL_RWFromFile(__DIR__ . '/path/to/output.png'
 Individual saving function
 
 ```php
-$image = new \SDL\Image\Image();
+$image = new \Serafim\SDL\Image\Image();
 
 $surface = $image->load(__DIR__ . '/path/to/file.jpg');
 
@@ -741,8 +740,8 @@ $image->saveJpg($surface, __DIR__ . '/path/to/output-quality-80.jpg', 80);
 Individual saving function
 
 ```php
-$sdl = new \SDL\SDL();
-$image = new \SDL\Image\Image();
+$sdl = new \Serafim\SDL\SDL();
+$image = new \Serafim\SDL\Image\Image();
 
 $surface = $image->load(__DIR__ . '/path/to/file.jpg');
 
