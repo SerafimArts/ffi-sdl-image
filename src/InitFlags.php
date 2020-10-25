@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Serafim\SDL\Image;
 
 /**
- * Interface InitFlags
+ * @psalm-type SDLImageInitFlags = InitFlags::IMG_*
  */
 interface InitFlags
 {

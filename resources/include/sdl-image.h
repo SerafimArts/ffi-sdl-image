@@ -1,12 +1,8 @@
-
-#define FFI_SCOPE "sdl-image"
-
-#include "sdl-types.h"
+#include <sdl.h>
 
 // =====================================================================================================================
 //  Function Definitions
 // =====================================================================================================================
-
 
 extern int IMG_Init(int flags);
 extern void IMG_Quit(void);
@@ -63,7 +59,7 @@ extern int IMG_SavePNG_RW(SDL_Surface* surface, SDL_RWops* dst, int freedst);
 //   https://discourse.libsdl.org/t/sdl-image-2-0-2-released/23281
 // =====================================================================================================================
 
-#if __sdl_image_version__ >= 2.0.2
+#if SDL_IMG_PREREQ(2, 0, 2)
     extern int IMG_isSVG(SDL_RWops* src);
     extern SDL_Surface* IMG_LoadSVG_RW(SDL_RWops* src);
 

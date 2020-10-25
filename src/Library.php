@@ -11,14 +11,18 @@ declare(strict_types=1);
 
 namespace Serafim\SDL\Image;
 
-use Serafim\FFILoader\BitDepth;
 use Serafim\FFILoader\Library as BaseLibrary;
-use Serafim\FFILoader\OperatingSystem;
+use Serafim\FFILoader\Loader;
+use Serafim\Flux\Library as FFILibrary;
+use Serafim\Preprocessor\PreprocessorInterface;
+use Serafim\SDL\Library as SDLLibrary;
+use Serafim\Version\Version as VersionInstance;
+use Serafim\Version\VersionInterface;
 
 /**
- * Class Library
+ * @psalm-type SDLVersion = object { major: int, minor: int, patch: int }
  */
-class Library extends BaseLibrary
+final class Library extends BaseLibrary
 {
     /**
      * @var string
@@ -30,37 +34,83 @@ class Library extends BaseLibrary
             uint8_t minor;
             uint8_t patch;
         } SDL_Version;
-        
+
         extern const SDL_Version* IMG_Linked_Version(void);
     clang;
 
     /**
      * @var string
      */
-    private const LIBRARY_WIN64 = __DIR__ . '/../bin/x64/SDL2_image.dll';
+    private const SDL_IMG_RESOURCES = __DIR__ . '/../resources';
 
     /**
      * @var string
      */
-    private const LIBRARY_WIN86 = __DIR__ . '/../bin/x86/SDL2_image.dll';
+    private const BINARY_WIN64 = self::SDL_IMG_RESOURCES . '/bin/x64/SDL2_image.dll';
 
     /**
      * @var string
      */
-    private const LIBRARY_LINUX = 'libSDL2_image-2.0.so.0';
+    private const BINARY_WIN86 = self::SDL_IMG_RESOURCES . '/bin/x86/SDL2_image.dll';
 
     /**
      * @var string
      */
-    private const LIBRARY_MAC = 'libSDL2_image-2.0.0.dylib';
+    private const BINARY_LINUX = 'libSDL2_image-2.0.so.0';
 
     /**
-     * @var string|null
+     * @var string
      */
-    protected ?string $version = null;
+    private const BINARY_DARWIN = 'libSDL2_image-2.0.0.dylib';
+
+    /**
+     * @var string
+     */
+    private const SDL_IMG_INCLUDE = self::SDL_IMG_RESOURCES . '/include/sdl-image.h';
+
+    /**
+     * @var VersionInterface|null
+     */
+    private ?VersionInterface $version;
+
+    /**
+     * @var SDLLibrary
+     */
+    private SDLLibrary $sdl;
+
+    /**
+     * @param SDLLibrary $sdl
+     * @param VersionInterface|null $version
+     */
+    public function __construct(SDLLibrary $sdl, VersionInterface $version = null)
+    {
+        $this->version = $version;
+        $this->sdl = $sdl;
+    }
+
+    /**
+     * @param Loader $loader
+     * @param PreprocessorInterface $pre
+     */
+    public function extend(Loader $loader, PreprocessorInterface $pre): void
+    {
+        // Load SDL headers without prototypes
+        $headers = $loader->headers($this->sdl, [SDLLibrary::DIRECTIVE_SDL_NO_PROTOTYPES => true]);
+
+        // Create virtual file ("#include <sdl.h>")
+        $pre->add($headers, 'sdl.h');
+    }
 
     /**
      * @return string
+     */
+    public function getDirectory(): string
+    {
+        return $this->sdl->getDirectory();
+    }
+
+    /**
+     * {@inheritDoc}
      */
     public function getName(): string
     {
@@ -68,67 +118,94 @@ class Library extends BaseLibrary
     }
 
     /**
-     * @return string
+     * @return VersionInterface
      */
-    public function getHeaders(): string
+    public function getVersion(): VersionInterface
     {
-        return __DIR__ . '/../resources/sdl-image.h';
+        return $this->version ??= $this->detectVersion($this->getBinary());
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getVersion(string $library): string
+    public function getBinary(): string
     {
-        if ($this->version === null) {
-            $ctx = \FFI::cdef(static::IMG_GET_VERSION, $library);
+        switch (\PHP_OS_FAMILY) {
+            case 'Windows':
+                return \PHP_INT_SIZE === 8 ? self::BINARY_WIN64 : self::BINARY_WIN86;
 
-            $ver = $ctx->IMG_Linked_Version()[0];
+            case 'Linux':
+                return self::BINARY_LINUX;
 
-            return $this->version = \sprintf('%d.%d.%d', $ver->major, $ver->minor, $ver->patch);
+            case 'Darwin':
+                return self::BINARY_DARWIN;
+
+            default:
+                throw new \LogicException('Can not load SDL Image library on your OS');
+        }
+    }
+
+    /**
+     * @return \SplFileInfo
+     */
+    public function getHeaders(): \SplFileInfo
+    {
+        return new \SplFileInfo(self::SDL_IMG_INCLUDE);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDirectives(): iterable
+    {
+        yield 'SDL_IMG_PREREQ' => function ($major, $minor, $patch): string {
+            $needle = new VersionInstance((int)$major, (int)$minor, (int)$patch);
+
+            return $this->getVersion()->gte($needle) ? '1' : '0';
+        };
+    }
+
+    /**
+     * @param string $binary
+     * @return VersionInterface
+     */
+    private function detectVersion(string $binary): VersionInterface
+    {
+        $directory = \getcwd();
+        FFILibrary::setDirectory($this->getDirectory());
+
+        try {
+            $ctx = \FFI::cdef(self::IMG_GET_VERSION, $binary);
+        } finally {
+            FFILibrary::setDirectory($directory);
         }
 
-        return $this->version;
+        /** @psalm-var SDLVersion $version */
+        $version = $ctx->IMG_Linked_Version()[0];
+
+        return new VersionInstance(
+            $version->major,
+            $version->minor,
+            $version->patch
+        );
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getLibrary(OperatingSystem $os, BitDepth $bits): ?string
+    public function getSuggestion(): string
     {
         switch (true) {
-            case $os->isWindows() && $bits->is64BitDepth():
-                return self::LIBRARY_WIN64;
-
-            case $os->isWindows() && $bits->is32BitDepth():
-                return self::LIBRARY_WIN86;
-
-            case $os->isLinux():
-                return self::LIBRARY_LINUX;
-
-            case $os->isMac():
-                return self::LIBRARY_MAC;
-        }
-
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function suggest(OperatingSystem $os, BitDepth $bits): ?string
-    {
-        switch (true) {
-            case $os->isWindows():
+            case 'Windows':
                 return 'Try to open issue on GitHub: https://github.com/SerafimArts/ffi-sdl-image/issues';
 
-            case $os->isLinux():
+            case 'Linux':
                 return 'Dependency installation required: "sudo apt install libsdl2-image-2.0-0 -y"';
 
-            case $os->isMac():
+            case 'Darwin':
                 return 'Dependency installation required: "brew install sdl2_image"';
         }
 
-        return null;
+        return parent::getSuggestion();
     }
 }
