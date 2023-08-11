@@ -25,12 +25,7 @@ final class Header implements HeaderInterface
     private const SDL_H = <<<'CPP'
         #ifndef SDL_h_
             #define SDL_h_
-            typedef uint8_t Uint8;
-            typedef struct SDL_version {
-                Uint8 major;
-                Uint8 minor;
-                Uint8 patch;
-            } SDL_version;
+            typedef struct SDL_version SDL_version;
             typedef struct SDL_Surface SDL_Surface;
             typedef struct SDL_RWops SDL_RWops;
             typedef struct SDL_Texture SDL_Texture;
