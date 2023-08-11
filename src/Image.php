@@ -69,10 +69,10 @@ final class Image extends Proxy implements InitFlags
     private function getHeader(PreprocessorInterface $pre, ?CacheInterface $cache): string|\Stringable
     {
         if ($cache !== null) {
-            return new CacheAwareHeader($this->sdl, $this->version, $pre, $cache);
+            return new CacheAwareHeader($this->sdl->version, $this->version, $pre, $cache);
         }
 
-        return Header::create($this->sdl, $this->version, $pre);
+        return Header::create($this->sdl->version, $this->version, $pre);
     }
 
     private function detectSDL2(): SDL
