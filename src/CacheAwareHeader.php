@@ -8,7 +8,6 @@ use FFI\Contracts\Headers\HeaderInterface;
 use FFI\Contracts\Headers\VersionInterface;
 use FFI\Contracts\Preprocessor\PreprocessorInterface;
 use Psr\SimpleCache\CacheInterface;
-use Serafim\SDL\SDL;
 
 /**
  * @internal This is an internal library class, please do not use it in your code.

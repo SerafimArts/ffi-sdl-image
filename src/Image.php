@@ -36,7 +36,7 @@ final class Image extends Proxy implements InitFlags
     public readonly string $library;
 
     /**
-     * Contains current compiled SDL version.
+     * Contains current compiled SDL Image version.
      */
     public readonly VersionInterface $version;
 
@@ -170,6 +170,4 @@ final class Image extends Proxy implements InitFlags
     {
         return \FFI::addr($type);
     }
-
-
 }

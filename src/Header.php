@@ -85,7 +85,7 @@ final class Header implements HeaderInterface
         $pre->define('SDLCALL', '');
         $pre->define('SDL_VERSION_ATLEAST',
             static fn (string $maj = '1', string $min = '0', string $patch = '0'): bool =>
-                \version_compare($sdlImageVersion->toString(), \sprintf('%d.%d.%d', $maj, $min, $patch), '>=')
+                \version_compare($sdlVersion->toString(), \sprintf('%d.%d.%d', $maj, $min, $patch), '>=')
         );
 
         return new self($pre);
