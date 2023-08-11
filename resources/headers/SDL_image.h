@@ -2166,7 +2166,9 @@ extern DECLSPEC IMG_Animation * SDLCALL IMG_LoadAnimationTyped_RW(SDL_RWops *src
  * \sa IMG_LoadAnimation_RW
  * \sa IMG_LoadAnimationTyped_RW
  */
+#if _SDL_IMAGE_VERSION_GTE(2.6.0)
 extern DECLSPEC void SDLCALL IMG_FreeAnimation(IMG_Animation *anim);
+#endif
 
 /**
  * Load a GIF animation directly.
@@ -2186,7 +2188,9 @@ extern DECLSPEC void SDLCALL IMG_FreeAnimation(IMG_Animation *anim);
  * \sa IMG_LoadAnimationTyped_RW
  * \sa IMG_FreeAnimation
  */
+#if _SDL_IMAGE_VERSION_GTE(2.6.0)
 extern DECLSPEC IMG_Animation * SDLCALL IMG_LoadGIFAnimation_RW(SDL_RWops *src);
+#endif
 
 /**
  * Report SDL_image errors
