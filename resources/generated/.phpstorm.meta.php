@@ -77,122 +77,73 @@ namespace PHPSTORM_META {
         'int64_t',
         'uint64_t',
         '__NSConstantString',
-        '__NSConstantString_tag'
+        '__NSConstantString*',
+        '__NSConstantString**',
+        '__NSConstantString_tag',
+        'SDL_version',
+        'SDL_version*',
+        'SDL_version**',
+        'SDL_Surface',
+        'SDL_Surface*',
+        'SDL_Surface**',
+        'SDL_RWops',
+        'SDL_RWops*',
+        'SDL_RWops**',
+        'SDL_Texture',
+        'SDL_Texture*',
+        'SDL_Texture**',
+        'SDL_Renderer',
+        'SDL_Renderer*',
+        'SDL_Renderer**'
     );
     expectedArguments(\Serafim\SDL\Image\Image::new(), 0, argumentsSet('ffi_sdl_image_types_list'));
+    expectedArguments(\Serafim\SDL\Image\Image::cast(), 0, argumentsSet('ffi_sdl_image_types_list'));
     expectedArguments(\Serafim\SDL\Image\Image::type(), 0, argumentsSet('ffi_sdl_image_types_list'));
     override(\Serafim\SDL\Image\Image::new(), map([
         // structures autocompletion
         '' => '\PHPSTORM_META\@',
         '__NSConstantString' => '\PHPSTORM_META\NSConstantString',
-        'max_align_t' => '\PHPSTORM_META\MaxAlignT',
-        '__fsid_t' => '\PHPSTORM_META\FsidT',
-        'SDL_AssertData' => '\PHPSTORM_META\SDLAssertData',
-        'SDL_atomic_t' => '\PHPSTORM_META\SDLAtomicT',
-        'SDL_mutex' => '\PHPSTORM_META\SDLMutex',
-        'SDL_sem' => '\PHPSTORM_META\SDLSem',
-        'SDL_cond' => '\PHPSTORM_META\SDLCond',
-        'SDL_Thread' => '\PHPSTORM_META\SDLThread',
-        'SDL_RWops' => '\PHPSTORM_META\SDLRWops',
-        'SDL_AudioSpec' => '\PHPSTORM_META\SDLAudioSpec',
-        'SDL_AudioCVT' => '\PHPSTORM_META\SDLAudioCVT',
-        'SDL_AudioStream' => '\PHPSTORM_META\SDLAudioStream',
-        'div_t' => '\PHPSTORM_META\DivT',
-        'ldiv_t' => '\PHPSTORM_META\LdivT',
-        'lldiv_t' => '\PHPSTORM_META\LldivT',
-        '__sigset_t' => '\PHPSTORM_META\SigsetT',
-        'fd_set' => '\PHPSTORM_META\FdSet',
-        '__atomic_wide_counter' => '\PHPSTORM_META\AtomicWideCounter',
-        '__pthread_list_t' => '\PHPSTORM_META\PthreadListT',
-        '__pthread_slist_t' => '\PHPSTORM_META\PthreadSlistT',
-        '__once_flag' => '\PHPSTORM_META\OnceFlag',
-        'pthread_mutexattr_t' => '\PHPSTORM_META\PthreadMutexattrT',
-        'pthread_condattr_t' => '\PHPSTORM_META\PthreadCondattrT',
-        'pthread_attr_t' => '\PHPSTORM_META\PthreadAttrT',
-        'pthread_mutex_t' => '\PHPSTORM_META\PthreadMutexT',
-        'pthread_cond_t' => '\PHPSTORM_META\PthreadCondT',
-        'pthread_rwlock_t' => '\PHPSTORM_META\PthreadRwlockT',
-        'pthread_rwlockattr_t' => '\PHPSTORM_META\PthreadRwlockattrT',
-        'pthread_barrier_t' => '\PHPSTORM_META\PthreadBarrierT',
-        'pthread_barrierattr_t' => '\PHPSTORM_META\PthreadBarrierattrT',
-        '__tile1024i' => '\PHPSTORM_META\Tile1024i',
-        'SDL_Color' => '\PHPSTORM_META\SDLColor',
-        'SDL_Palette' => '\PHPSTORM_META\SDLPalette',
-        'SDL_PixelFormat' => '\PHPSTORM_META\SDLPixelFormat',
-        'SDL_Point' => '\PHPSTORM_META\SDLPoint',
-        'SDL_FPoint' => '\PHPSTORM_META\SDLFPoint',
-        'SDL_Rect' => '\PHPSTORM_META\SDLRect',
-        'SDL_FRect' => '\PHPSTORM_META\SDLFRect',
-        'SDL_BlitMap' => '\PHPSTORM_META\SDLBlitMap',
-        'SDL_Surface' => '\PHPSTORM_META\SDLSurface',
-        'SDL_DisplayMode' => '\PHPSTORM_META\SDLDisplayMode',
-        'SDL_Window' => '\PHPSTORM_META\SDLWindow',
-        'SDL_Keysym' => '\PHPSTORM_META\SDLKeysym',
-        'SDL_Cursor' => '\PHPSTORM_META\SDLCursor',
-        'SDL_GUID' => '\PHPSTORM_META\SDLGUID',
-        'SDL_Joystick' => '\PHPSTORM_META\SDLJoystick',
-        'SDL_VirtualJoystickDesc' => '\PHPSTORM_META\SDLVirtualJoystickDesc',
-        'SDL_Sensor' => '\PHPSTORM_META\SDLSensor',
-        'SDL_GameController' => '\PHPSTORM_META\SDLGameController',
-        'SDL_GameControllerButtonBind' => '\PHPSTORM_META\SDLGameControllerButtonBind',
-        'SDL_Finger' => '\PHPSTORM_META\SDLFinger',
-        'SDL_CommonEvent' => '\PHPSTORM_META\SDLCommonEvent',
-        'SDL_DisplayEvent' => '\PHPSTORM_META\SDLDisplayEvent',
-        'SDL_WindowEvent' => '\PHPSTORM_META\SDLWindowEvent',
-        'SDL_KeyboardEvent' => '\PHPSTORM_META\SDLKeyboardEvent',
-        'SDL_TextEditingEvent' => '\PHPSTORM_META\SDLTextEditingEvent',
-        'SDL_TextEditingExtEvent' => '\PHPSTORM_META\SDLTextEditingExtEvent',
-        'SDL_TextInputEvent' => '\PHPSTORM_META\SDLTextInputEvent',
-        'SDL_MouseMotionEvent' => '\PHPSTORM_META\SDLMouseMotionEvent',
-        'SDL_MouseButtonEvent' => '\PHPSTORM_META\SDLMouseButtonEvent',
-        'SDL_MouseWheelEvent' => '\PHPSTORM_META\SDLMouseWheelEvent',
-        'SDL_JoyAxisEvent' => '\PHPSTORM_META\SDLJoyAxisEvent',
-        'SDL_JoyBallEvent' => '\PHPSTORM_META\SDLJoyBallEvent',
-        'SDL_JoyHatEvent' => '\PHPSTORM_META\SDLJoyHatEvent',
-        'SDL_JoyButtonEvent' => '\PHPSTORM_META\SDLJoyButtonEvent',
-        'SDL_JoyDeviceEvent' => '\PHPSTORM_META\SDLJoyDeviceEvent',
-        'SDL_JoyBatteryEvent' => '\PHPSTORM_META\SDLJoyBatteryEvent',
-        'SDL_ControllerAxisEvent' => '\PHPSTORM_META\SDLControllerAxisEvent',
-        'SDL_ControllerButtonEvent' => '\PHPSTORM_META\SDLControllerButtonEvent',
-        'SDL_ControllerDeviceEvent' => '\PHPSTORM_META\SDLControllerDeviceEvent',
-        'SDL_ControllerTouchpadEvent' => '\PHPSTORM_META\SDLControllerTouchpadEvent',
-        'SDL_ControllerSensorEvent' => '\PHPSTORM_META\SDLControllerSensorEvent',
-        'SDL_AudioDeviceEvent' => '\PHPSTORM_META\SDLAudioDeviceEvent',
-        'SDL_TouchFingerEvent' => '\PHPSTORM_META\SDLTouchFingerEvent',
-        'SDL_MultiGestureEvent' => '\PHPSTORM_META\SDLMultiGestureEvent',
-        'SDL_DollarGestureEvent' => '\PHPSTORM_META\SDLDollarGestureEvent',
-        'SDL_DropEvent' => '\PHPSTORM_META\SDLDropEvent',
-        'SDL_SensorEvent' => '\PHPSTORM_META\SDLSensorEvent',
-        'SDL_QuitEvent' => '\PHPSTORM_META\SDLQuitEvent',
-        'SDL_OSEvent' => '\PHPSTORM_META\SDLOSEvent',
-        'SDL_UserEvent' => '\PHPSTORM_META\SDLUserEvent',
-        'SDL_SysWMmsg' => '\PHPSTORM_META\SDLSysWMmsg',
-        'SDL_SysWMEvent' => '\PHPSTORM_META\SDLSysWMEvent',
-        'SDL_Event' => '\PHPSTORM_META\SDLEvent',
-        'SDL_Haptic' => '\PHPSTORM_META\SDLHaptic',
-        'SDL_HapticDirection' => '\PHPSTORM_META\SDLHapticDirection',
-        'SDL_HapticConstant' => '\PHPSTORM_META\SDLHapticConstant',
-        'SDL_HapticPeriodic' => '\PHPSTORM_META\SDLHapticPeriodic',
-        'SDL_HapticCondition' => '\PHPSTORM_META\SDLHapticCondition',
-        'SDL_HapticRamp' => '\PHPSTORM_META\SDLHapticRamp',
-        'SDL_HapticLeftRight' => '\PHPSTORM_META\SDLHapticLeftRight',
-        'SDL_HapticCustom' => '\PHPSTORM_META\SDLHapticCustom',
-        'SDL_HapticEffect' => '\PHPSTORM_META\SDLHapticEffect',
-        'SDL_hid_device' => '\PHPSTORM_META\SDLHidDevice',
-        'SDL_hid_device_info' => '\PHPSTORM_META\SDLHidDeviceInfo',
-        'SDL_MessageBoxButtonData' => '\PHPSTORM_META\SDLMessageBoxButtonData',
-        'SDL_MessageBoxColor' => '\PHPSTORM_META\SDLMessageBoxColor',
-        'SDL_MessageBoxColorScheme' => '\PHPSTORM_META\SDLMessageBoxColorScheme',
-        'SDL_MessageBoxData' => '\PHPSTORM_META\SDLMessageBoxData',
-        'SDL_RendererInfo' => '\PHPSTORM_META\SDLRendererInfo',
-        'SDL_Vertex' => '\PHPSTORM_META\SDLVertex',
-        'SDL_Renderer' => '\PHPSTORM_META\SDLRenderer',
-        'SDL_Texture' => '\PHPSTORM_META\SDLTexture',
-        'SDL_WindowShapeParams' => '\PHPSTORM_META\SDLWindowShapeParams',
-        'SDL_WindowShapeMode' => '\PHPSTORM_META\SDLWindowShapeMode',
+        '__NSConstantString*' => '\PHPSTORM_META\NSConstantString[]',
+        '__NSConstantString*' => '\PHPSTORM_META\NSConstantString',
+        '__NSConstantString**' => '\PHPSTORM_META\NSConstantString[][]',
+        '__NSConstantString**' => '\PHPSTORM_META\NSConstantString[]',
+        '__NSConstantString**' => '\PHPSTORM_META\NSConstantString',
         'SDL_version' => '\PHPSTORM_META\SDLVersion',
-        'SDL_Locale' => '\PHPSTORM_META\SDLLocale',
+        'SDL_version*' => '\PHPSTORM_META\SDLVersion[]',
+        'SDL_version*' => '\PHPSTORM_META\SDLVersion',
+        'SDL_version**' => '\PHPSTORM_META\SDLVersion[][]',
+        'SDL_version**' => '\PHPSTORM_META\SDLVersion[]',
+        'SDL_version**' => '\PHPSTORM_META\SDLVersion',
+        'SDL_Surface' => '\PHPSTORM_META\SDLSurface',
+        'SDL_Surface*' => '\PHPSTORM_META\SDLSurface[]',
+        'SDL_Surface*' => '\PHPSTORM_META\SDLSurface',
+        'SDL_Surface**' => '\PHPSTORM_META\SDLSurface[][]',
+        'SDL_Surface**' => '\PHPSTORM_META\SDLSurface[]',
+        'SDL_Surface**' => '\PHPSTORM_META\SDLSurface',
+        'SDL_RWops' => '\PHPSTORM_META\SDLRWops',
+        'SDL_RWops*' => '\PHPSTORM_META\SDLRWops[]',
+        'SDL_RWops*' => '\PHPSTORM_META\SDLRWops',
+        'SDL_RWops**' => '\PHPSTORM_META\SDLRWops[][]',
+        'SDL_RWops**' => '\PHPSTORM_META\SDLRWops[]',
+        'SDL_RWops**' => '\PHPSTORM_META\SDLRWops',
+        'SDL_Texture' => '\PHPSTORM_META\SDLTexture',
+        'SDL_Texture*' => '\PHPSTORM_META\SDLTexture[]',
+        'SDL_Texture*' => '\PHPSTORM_META\SDLTexture',
+        'SDL_Texture**' => '\PHPSTORM_META\SDLTexture[][]',
+        'SDL_Texture**' => '\PHPSTORM_META\SDLTexture[]',
+        'SDL_Texture**' => '\PHPSTORM_META\SDLTexture',
+        'SDL_Renderer' => '\PHPSTORM_META\SDLRenderer',
+        'SDL_Renderer*' => '\PHPSTORM_META\SDLRenderer[]',
+        'SDL_Renderer*' => '\PHPSTORM_META\SDLRenderer',
+        'SDL_Renderer**' => '\PHPSTORM_META\SDLRenderer[][]',
+        'SDL_Renderer**' => '\PHPSTORM_META\SDLRenderer[]',
+        'SDL_Renderer**' => '\PHPSTORM_META\SDLRenderer',
         'IMG_Animation' => '\PHPSTORM_META\IMGAnimation',
+        'IMG_Animation*' => '\PHPSTORM_META\IMGAnimation[]',
+        'IMG_Animation*' => '\PHPSTORM_META\IMGAnimation',
+        'IMG_Animation**' => '\PHPSTORM_META\IMGAnimation[][]',
+        'IMG_Animation**' => '\PHPSTORM_META\IMGAnimation[]',
+        'IMG_Animation**' => '\PHPSTORM_META\IMGAnimation',
     ]));
     /**
      * Generated "__NSConstantString" structure layout.
@@ -217,6 +168,93 @@ namespace PHPSTORM_META {
         public int $length;
         /**
          * @internal Please use {@see \Serafim\SDL\Image\Image::new()} with '__NSConstantString' argument instead.
+         */
+        private function __construct()
+        {
+        }
+    }
+    /**
+     * Generated "SDL_version" structure layout.
+     *
+     * @ignore
+     * @internal Internal interface to ensure precise type inference.
+     */
+    final class SDLVersion extends \FFI\CData
+    {
+        /**
+         * @var int<0, 255>
+         */
+        public int $major;
+        /**
+         * @var int<0, 255>
+         */
+        public int $minor;
+        /**
+         * @var int<0, 255>
+         */
+        public int $patch;
+        /**
+         * @internal Please use {@see \Serafim\SDL\Image\Image::new()} with 'SDL_version' argument instead.
+         */
+        private function __construct()
+        {
+        }
+    }
+    /**
+     * Generated "SDL_Surface" structure layout.
+     *
+     * @ignore
+     * @internal Internal interface to ensure precise type inference.
+     */
+    final class SDLSurface extends \FFI\CData
+    {
+        /**
+         * @internal Please use {@see \Serafim\SDL\Image\Image::new()} with 'SDL_Surface' argument instead.
+         */
+        private function __construct()
+        {
+        }
+    }
+    /**
+     * Generated "SDL_RWops" structure layout.
+     *
+     * @ignore
+     * @internal Internal interface to ensure precise type inference.
+     */
+    final class SDLRWops extends \FFI\CData
+    {
+        /**
+         * @internal Please use {@see \Serafim\SDL\Image\Image::new()} with 'SDL_RWops' argument instead.
+         */
+        private function __construct()
+        {
+        }
+    }
+    /**
+     * Generated "SDL_Texture" structure layout.
+     *
+     * @ignore
+     * @internal Internal interface to ensure precise type inference.
+     */
+    final class SDLTexture extends \FFI\CData
+    {
+        /**
+         * @internal Please use {@see \Serafim\SDL\Image\Image::new()} with 'SDL_Texture' argument instead.
+         */
+        private function __construct()
+        {
+        }
+    }
+    /**
+     * Generated "SDL_Renderer" structure layout.
+     *
+     * @ignore
+     * @internal Internal interface to ensure precise type inference.
+     */
+    final class SDLRenderer extends \FFI\CData
+    {
+        /**
+         * @internal Please use {@see \Serafim\SDL\Image\Image::new()} with 'SDL_Renderer' argument instead.
          */
         private function __construct()
         {
