@@ -1,13 +1,11 @@
 # FFI SDL Image Bindings
 
-This is a SDL Image bindings for PHP using [SDL php ffi bindings library](https://github.com/SerafimArts/ffi-sdl).
+This is a SDL Image bindings for PHP using [SDL PHP FFI bindings library](https://github.com/SerafimArts/ffi-sdl).
 
 - [System Requirements](#requirements)
 - [Installation](#installation)
-    - [Linux](#linux)
-    - [MacOS](#macos)
-    - [Windows](#windows)
 - [Documentation](#documentation)
+- [Initialization](#initialization)
 
 ## Requirements
 
