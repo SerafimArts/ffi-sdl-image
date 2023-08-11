@@ -59,11 +59,23 @@ final class Image extends Proxy implements InitFlags
 
         $header = $this->getHeader($pre, $cache);
 
+        $this->useSDLBinariesDirectory();
+
+        parent::__construct(\FFI::cdef((string)$header, $this->library));
+    }
+
+    protected function useSDLBinariesDirectory(): void
+    {
         if ($directory = \dirname($this->sdl->library)) {
             WorkDirectory::set($directory);
         }
+    }
 
-        parent::__construct(\FFI::cdef((string)$header, $this->library));
+    protected function useImageBinariesDirectory(): void
+    {
+        if ($directory = \dirname($this->library)) {
+            WorkDirectory::set($directory);
+        }
     }
 
     private function getHeader(PreprocessorInterface $pre, ?CacheInterface $cache): string|\Stringable

@@ -9,9 +9,21 @@ use FFI\CData;
 /**
  * @internal This is an internal library trait, please do not use it in your code.
  * @psalm-internal Serafim\SDL\Image
+ *
+ * @psalm-require-extends Image
+ * @mixin Image
+ *
+ * @property-read object $ffi
  */
 trait Marshaller
 {
+    public function IMG_Init(int $flags): int
+    {
+        $this->useImageBinariesDirectory();
+
+        return $this->ffi->IMG_Init($flags);
+    }
+
     public function IMG_Linked_Version(): ?CData
     {
         $result = $this->ffi->IMG_Linked_Version();
@@ -21,6 +33,8 @@ trait Marshaller
 
     public function IMG_LoadTyped_RW(?CData $src, int $freesrc, string|CData $type): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_LoadTyped_RW(
             $src === null ? null : $this->cast('SDL_RWops*', $src),
             $freesrc,
@@ -32,6 +46,8 @@ trait Marshaller
 
     public function IMG_Load(string|CData $file): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_Load($file);
 
         return $result !== null ? $this->sdl->cast('SDL_Surface*', $result) : null;
@@ -39,6 +55,8 @@ trait Marshaller
 
     public function IMG_Load_RW(?CData $src, int $freesrc): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_Load_RW(
             $src === null ? null : $this->cast('SDL_RWops*', $src),
             $freesrc,
@@ -49,6 +67,8 @@ trait Marshaller
 
     public function IMG_LoadTexture(?CData $renderer, string|CData $file): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_LoadTexture(
             $renderer === null ? null : $this->cast('SDL_Renderer*', $renderer),
             $file,
@@ -59,6 +79,8 @@ trait Marshaller
 
     public function IMG_LoadTexture_RW(?CData $renderer, ?CData $src, int $freesrc): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_LoadTexture_RW(
             $renderer === null ? null : $this->cast('SDL_Renderer*', $renderer),
             $src === null ? null : $this->cast('SDL_RWops*', $src),
@@ -70,6 +92,8 @@ trait Marshaller
 
     public function IMG_LoadTextureTyped_RW(?CData $renderer, ?CData $src, int $freesrc, string|CData $type): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_LoadTextureTyped_RW(
             $renderer === null ? null : $this->cast('SDL_Renderer*', $renderer),
             $src === null ? null : $this->cast('SDL_RWops*', $src),
@@ -172,6 +196,8 @@ trait Marshaller
 
     public function IMG_LoadAVIF_RW(?CData $src): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_LoadAVIF_RW($src === null ? null : $this->cast('SDL_RWops*', $src));
 
         return $result !== null ? $this->sdl->cast('SDL_Surface*', $result) : null;
@@ -179,6 +205,8 @@ trait Marshaller
 
     public function IMG_LoadICO_RW(?CData $src): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_LoadICO_RW($src === null ? null : $this->cast('SDL_RWops*', $src));
 
         return $result !== null ? $this->sdl->cast('SDL_Surface*', $result) : null;
@@ -186,6 +214,8 @@ trait Marshaller
 
     public function IMG_LoadCUR_RW(?CData $src): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_LoadCUR_RW($src === null ? null : $this->cast('SDL_RWops*', $src));
 
         return $result !== null ? $this->sdl->cast('SDL_Surface*', $result) : null;
@@ -193,6 +223,8 @@ trait Marshaller
 
     public function IMG_LoadBMP_RW(?CData $src): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_LoadBMP_RW($src === null ? null : $this->cast('SDL_RWops*', $src));
 
         return $result !== null ? $this->sdl->cast('SDL_Surface*', $result) : null;
@@ -200,6 +232,8 @@ trait Marshaller
 
     public function IMG_LoadGIF_RW(?CData $src): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_LoadGIF_RW($src === null ? null : $this->cast('SDL_RWops*', $src));
 
         return $result !== null ? $this->sdl->cast('SDL_Surface*', $result) : null;
@@ -207,6 +241,8 @@ trait Marshaller
 
     public function IMG_LoadJPG_RW(?CData $src): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_LoadJPG_RW($src === null ? null : $this->cast('SDL_RWops*', $src));
 
         return $result !== null ? $this->sdl->cast('SDL_Surface*', $result) : null;
@@ -214,6 +250,8 @@ trait Marshaller
 
     public function IMG_LoadJXL_RW(?CData $src): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_LoadJXL_RW($src === null ? null : $this->cast('SDL_RWops*', $src));
 
         return $result !== null ? $this->sdl->cast('SDL_Surface*', $result) : null;
@@ -221,6 +259,8 @@ trait Marshaller
 
     public function IMG_LoadLBM_RW(?CData $src): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_LoadLBM_RW($src === null ? null : $this->cast('SDL_RWops*', $src));
 
         return $result !== null ? $this->sdl->cast('SDL_Surface*', $result) : null;
@@ -228,6 +268,8 @@ trait Marshaller
 
     public function IMG_LoadPCX_RW(?CData $src): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_LoadPCX_RW($src === null ? null : $this->cast('SDL_RWops*', $src));
 
         return $result !== null ? $this->sdl->cast('SDL_Surface*', $result) : null;
@@ -235,6 +277,8 @@ trait Marshaller
 
     public function IMG_LoadPNG_RW(?CData $src): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_LoadPNG_RW($src === null ? null : $this->cast('SDL_RWops*', $src));
 
         return $result !== null ? $this->sdl->cast('SDL_Surface*', $result) : null;
@@ -242,6 +286,8 @@ trait Marshaller
 
     public function IMG_LoadPNM_RW(?CData $src): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_LoadPNM_RW($src === null ? null : $this->cast('SDL_RWops*', $src));
 
         return $result !== null ? $this->sdl->cast('SDL_Surface*', $result) : null;
@@ -249,6 +295,8 @@ trait Marshaller
 
     public function IMG_LoadSVG_RW(?CData $src): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_LoadSVG_RW($src === null ? null : $this->cast('SDL_RWops*', $src));
 
         return $result !== null ? $this->sdl->cast('SDL_Surface*', $result) : null;
@@ -256,6 +304,8 @@ trait Marshaller
 
     public function IMG_LoadQOI_RW(?CData $src): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_LoadQOI_RW($src === null ? null : $this->cast('SDL_RWops*', $src));
 
         return $result !== null ? $this->sdl->cast('SDL_Surface*', $result) : null;
@@ -263,6 +313,8 @@ trait Marshaller
 
     public function IMG_LoadTGA_RW(?CData $src): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_LoadTGA_RW($src === null ? null : $this->cast('SDL_RWops*', $src));
 
         return $result !== null ? $this->sdl->cast('SDL_Surface*', $result) : null;
@@ -270,6 +322,8 @@ trait Marshaller
 
     public function IMG_LoadTIF_RW(?CData $src): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_LoadTIF_RW($src === null ? null : $this->cast('SDL_RWops*', $src));
 
         return $result !== null ? $this->sdl->cast('SDL_Surface*', $result) : null;
@@ -277,6 +331,8 @@ trait Marshaller
 
     public function IMG_LoadXCF_RW(?CData $src): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_LoadXCF_RW($src === null ? null : $this->cast('SDL_RWops*', $src));
 
         return $result !== null ? $this->sdl->cast('SDL_Surface*', $result) : null;
@@ -284,6 +340,8 @@ trait Marshaller
 
     public function IMG_LoadXPM_RW(?CData $src): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_LoadXPM_RW($src === null ? null : $this->cast('SDL_RWops*', $src));
 
         return $result !== null ? $this->sdl->cast('SDL_Surface*', $result) : null;
@@ -291,6 +349,8 @@ trait Marshaller
 
     public function IMG_LoadXV_RW(?CData $src): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_LoadXV_RW($src === null ? null : $this->cast('SDL_RWops*', $src));
 
         return $result !== null ? $this->sdl->cast('SDL_Surface*', $result) : null;
@@ -298,6 +358,8 @@ trait Marshaller
 
     public function IMG_LoadWEBP_RW(?CData $src): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_LoadWEBP_RW($src === null ? null : $this->cast('SDL_RWops*', $src));
 
         return $result !== null ? $this->sdl->cast('SDL_Surface*', $result) : null;
@@ -305,6 +367,8 @@ trait Marshaller
 
     public function IMG_LoadSizedSVG_RW(?CData $src, int $width, int $height): ?CData
     {
+        $this->useImageBinariesDirectory();
+
         $result = $this->ffi->IMG_LoadSizedSVG_RW(
             $src === null ? null : $this->cast('SDL_RWops*', $src),
             $width,
@@ -330,6 +394,8 @@ trait Marshaller
 
     public function IMG_SavePNG(?CData $surface, string|CData $file): int
     {
+        $this->useImageBinariesDirectory();
+
         return $this->ffi->IMG_SavePNG(
             $surface === null ? null : $this->cast('SDL_Surface*', $surface),
             $file,
@@ -338,6 +404,8 @@ trait Marshaller
 
     public function IMG_SavePNG_RW(?CData $surface, ?CData $dst, int $freedst): int
     {
+        $this->useImageBinariesDirectory();
+
         return $this->ffi->IMG_SavePNG_RW(
             $surface === null ? null : $this->cast('SDL_Surface*', $surface),
             $dst === null ? null : $this->cast('SDL_RWops*', $dst),
@@ -347,6 +415,8 @@ trait Marshaller
 
     public function IMG_SaveJPG(?CData $surface, string|CData $file, int $quality): int
     {
+        $this->useImageBinariesDirectory();
+
         return $this->ffi->IMG_SaveJPG(
             $surface === null ? null : $this->cast('SDL_Surface*', $surface),
             $file,
@@ -356,6 +426,8 @@ trait Marshaller
 
     public function IMG_SaveJPG_RW(?CData $surface, ?CData $dst, int $freedst, int $quality): int
     {
+        $this->useImageBinariesDirectory();
+
         return $this->ffi->IMG_SaveJPG_RW(
             $surface === null ? null : $this->cast('SDL_Surface*', $surface),
             $dst === null ? null : $this->cast('SDL_RWops*', $dst),
