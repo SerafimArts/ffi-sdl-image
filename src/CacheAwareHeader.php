@@ -19,8 +19,8 @@ final class CacheAwareHeader implements HeaderInterface
     private ?string $key = null;
 
     public function __construct(
-        private readonly SDL $sdl,
-        private readonly VersionInterface $version,
+        private readonly VersionInterface $sdlVersion,
+        private readonly VersionInterface $imageVersion,
         private readonly PreprocessorInterface $pre,
         private readonly CacheInterface $cache,
     ) {
@@ -29,7 +29,7 @@ final class CacheAwareHeader implements HeaderInterface
     private function getKey(): string
     {
         return $this->key ??= \hash('xxh64', \vsprintf('%s:%s', [
-            $this->version->toString(),
+            $this->imageVersion->toString(),
             self::class,
         ]));
     }
@@ -40,7 +40,7 @@ final class CacheAwareHeader implements HeaderInterface
         $result = $this->cache->get($this->getKey());
 
         if ($result === null) {
-            $result = (string)Header::create($this->sdl, $this->version, $this->pre);
+            $result = (string)Header::create($this->sdlVersion, $this->imageVersion, $this->pre);
 
             $this->cache->set($this->getKey(), $result);
         }
