@@ -21,6 +21,8 @@ use Serafim\SDL\SDL;
  */
 final class Image extends Proxy implements InitFlags
 {
+    use Marshaller;
+
     /**
      * Contains referenced SDL library.
      */
@@ -168,4 +170,6 @@ final class Image extends Proxy implements InitFlags
     {
         return \FFI::addr($type);
     }
+
+
 }
