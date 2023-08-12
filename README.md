@@ -1,6 +1,6 @@
 # FFI SDL Image Bindings
 
-This is a SDL Image bindings for PHP using [SDL PHP FFI bindings library](https://github.com/SerafimArts/ffi-sdl).
+This is a SDL Image bindings for PHP using [SDL2 FFI bindings for the PHP language](https://github.com/SerafimArts/ffi-sdl).
 
 - [System Requirements](#requirements)
 - [Installation](#installation)
@@ -107,7 +107,6 @@ $image = new Image(sdl: $sdl);
 
 $sdl->SDL_Init(SDL::SDL_INIT_EVERYTHING);
 $image->IMG_Init(Image::IMG_INIT_PNG);
-
 
 $surface = $image->IMG_Load(__DIR__ . '/path/to/image.png');
 $image->IMG_SaveJPG($surface, __DIR__ . '/path/to/image.jpg', quality: 80);
