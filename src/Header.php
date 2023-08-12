@@ -57,18 +57,14 @@ final class Header implements HeaderInterface
             $sdlImageVersion = Version::create($sdlImageVersion->toString());
         }
 
-        //
-        // Custom directive
-        //
         $pre->define('_SDL_IMAGE_VERSION_GTE', static fn (string $expected): bool =>
             \version_compare($sdlImageVersion->toString(), $expected, '>=')
         );
-
-        //
-        // Custom directive
-        //
         $pre->define('_SDL_VERSION_GTE', static fn (string $expected): bool =>
             \version_compare($sdlVersion->toString(), $expected, '>=')
+        );
+        $pre->define('SDL_VERSION_ATLEAST', static fn (string $a, string $b, string $c): bool =>
+            \version_compare($sdlVersion->toString(), \sprintf('%d.%d.%d', $a, $b, $c), '>=')
         );
 
         $pre->add('SDL.h', self::SDL_H);
@@ -78,10 +74,6 @@ final class Header implements HeaderInterface
 
         $pre->define('DECLSPEC', '');
         $pre->define('SDLCALL', '');
-        $pre->define('SDL_VERSION_ATLEAST',
-            static fn (string $maj = '1', string $min = '0', string $patch = '0'): bool =>
-                \version_compare($sdlVersion->toString(), \sprintf('%d.%d.%d', $maj, $min, $patch), '>=')
-        );
 
         return new self($pre);
     }
