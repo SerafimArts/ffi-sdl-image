@@ -6,13 +6,14 @@ This is a SDL Image bindings for PHP using [SDL PHP FFI bindings library](https:
 - [Installation](#installation)
 - [Documentation](#documentation)
 - [Initialization](#initialization)
+- [Example](#example)
 
 ## Requirements
 
 - PHP ^8.1
 - ext-ffi
-- Windows, Linux or MacOS
-    - Android, iOS, BSD or something else are not supported yet
+- Windows, Linux, BSD or MacOS
+    - Android, iOS or something else are not supported yet
 - SDL and SDL Image >= 2.0
 
 ## Installation
@@ -58,8 +59,60 @@ the `Serafim\SDL\Image\Image` constructor.
 
 ```php
 // Load library from pathname (it may be relative or part of system-dependent path)
-$sdl = new Serafim\SDL\Image\Image(library: __DIR__ . '/path/to/library.so');
+$image = new Serafim\SDL\Image\Image(library: __DIR__ . '/path/to/library.so');
 
 // Try to automatically resolve library's pathname
-$sdl = new Serafim\SDL\Image\Image(library: null);
+$image = new Serafim\SDL\Image\Image(library: null);
+```
+
+You can also specify the library version explicitly. Depending on this version,
+the corresponding functions of the SDL Image will be available.
+
+> By default, the library will try to resolve SDL Image version automatically.
+
+```php
+// Use v2.0.5 from string
+$image = new Serafim\SDL\Image\Image(version: '2.0.5');
+
+// Use v2.6.3 from predefined versions constant
+$image = new Serafim\SDL\Image\Image(version: \Serafim\SDL\Image\Version::V2_6_3);
+
+// Use latest supported version
+$image = new Serafim\SDL\Image\Image(version: \Serafim\SDL\Image\Version::LATEST);
+```
+
+To speed up the header compiler, you can use any PSR-16 compatible cache driver.
+
+```php
+$image = new Serafim\SDL\Image\Image(cache: new Psr16Cache(...));
+```
+
+In addition, you can control other preprocessor directives explicitly:
+
+```php
+$pre = new \FFI\Preprocessor\Preprocessor();
+$pre->define('true', 'false'); // happy debugging!
+
+$image = new Serafim\SDL\Image\Image(pre: $pre);
+```
+
+## Example
+
+```php
+use Serafim\SDL\SDL;
+use Serafim\SDL\Image\Image;
+
+$sdl = new SDL();
+$image = new Image(sdl: $sdl);
+
+$sdl->SDL_Init(SDL::SDL_INIT_EVERYTHING);
+$image->IMG_Init(Image::IMG_INIT_PNG);
+
+
+$surface = $image->IMG_Load(__DIR__ . '/path/to/image.png');
+$image->IMG_SaveJPG($surface, __DIR__ . '/path/to/image.jpg', quality: 80);
+
+
+$image->IMG_Quit();
+$sdl->SDL_Quit();
 ```
