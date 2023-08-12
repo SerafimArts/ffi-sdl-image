@@ -1,6 +1,18 @@
 # FFI SDL Image Bindings
 
-This is a SDL Image bindings for PHP using [SDL2 FFI bindings for the PHP language](https://github.com/SerafimArts/ffi-sdl).
+<p align="center">
+    <a href="https://packagist.org/packages/serafim/ffi-sdl-image"><img src="https://poser.pugx.org/serafim/ffi-sdl-image/require/php?style=for-the-badge" alt="PHP 8.1+"></a>
+    <a href="https://github.com/libsdl-org/SDL_image"><img src="https://img.shields.io/badge/SDL_image-2.6.3-004953.svg?style=flat-square" alt="SDL_image"></a>
+    <a href="https://packagist.org/packages/serafim/ffi-sdl-image"><img src="https://poser.pugx.org/serafim/ffi-sdl-image/version?style=for-the-badge" alt="Latest Stable Version"></a>
+    <a href="https://packagist.org/packages/serafim/ffi-sdl-image"><img src="https://poser.pugx.org/serafim/ffi-sdl-image/v/unstable?style=for-the-badge" alt="Latest Unstable Version"></a>
+    <a href="https://packagist.org/packages/serafim/ffi-sdl-image"><img src="https://poser.pugx.org/serafim/ffi-sdl-image/downloads?style=for-the-badge" alt="Total Downloads"></a>
+    <a href="https://raw.githubusercontent.com/php-serafim/ffi-sdl-image/master/LICENSE.md"><img src="https://poser.pugx.org/serafim/ffi-sdl-image/license?style=for-the-badge" alt="License MIT"></a>
+</p>
+<p align="center">
+    <a href="https://github.com/php-serafim/ffi-sdl-image/actions"><img src="https://github.com/php-serafim/ffi-sdl-image/workflows/build/badge.svg"></a>
+</p>
+
+A SDL_image extension FFI bindings for the PHP language compatible with [SDL FFI bindings for the PHP language](https://github.com/SerafimArts/ffi-sdl).
 
 - [System Requirements](#requirements)
 - [Installation](#installation)
