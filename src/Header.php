@@ -25,11 +25,11 @@ final class Header implements HeaderInterface
     private const SDL_H = <<<'CPP'
         #ifndef SDL_h_
             #define SDL_h_
-            typedef struct SDL_version SDL_version;
-            typedef struct SDL_Surface SDL_Surface;
-            typedef struct SDL_RWops SDL_RWops;
-            typedef struct SDL_Texture SDL_Texture;
-            typedef struct SDL_Renderer SDL_Renderer;
+            typedef void* SDL_version;
+            typedef void* SDL_Surface;
+            typedef void* SDL_RWops;
+            typedef void* SDL_Texture;
+            typedef void* SDL_Renderer;
         #endif
         CPP;
 
