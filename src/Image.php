@@ -14,6 +14,7 @@ use FFI\Proxy\Proxy;
 use FFI\Proxy\Registry;
 use FFI\WorkDirectory\WorkDirectory;
 use Psr\SimpleCache\CacheInterface;
+use Serafim\SDL\Platform;
 use Serafim\SDL\SDL;
 
 /**
@@ -40,6 +41,11 @@ final class Image extends Proxy implements InitFlags
      */
     public readonly VersionInterface $version;
 
+    /**
+     * @psalm-taint-sink file $library
+     * @param non-empty-string|null $library
+     * @param VersionInterface|non-empty-string|null $version
+     */
     public function __construct(
         ?SDL $sdl = null,
         ?string $library = null,
@@ -52,7 +58,7 @@ final class Image extends Proxy implements InitFlags
         $this->sdl = $sdl ?? $this->detectSDL2();
         $this->library = $this->detectLibraryPathname($library);
         $this->version = match (true) {
-            \is_string($version) => Version::create($version),
+            \is_string($version) && $version !== '' => Version::create($version),
             $version instanceof VersionInterface => $version,
             default => $this->detectVersion(),
         };
@@ -66,19 +72,19 @@ final class Image extends Proxy implements InitFlags
 
     protected function useSDLBinariesDirectory(): void
     {
-        if ($directory = \dirname($this->sdl->library)) {
+        if (($directory = \dirname($this->sdl->library)) !== '') {
             WorkDirectory::set($directory);
         }
     }
 
     protected function useImageBinariesDirectory(): void
     {
-        if ($directory = \dirname($this->library)) {
+        if (($directory = \dirname($this->library)) !== '') {
             WorkDirectory::set($directory);
         }
     }
 
-    private function getHeader(PreprocessorInterface $pre, ?CacheInterface $cache): string|\Stringable
+    private function getHeader(PreprocessorInterface $pre, ?CacheInterface $cache): \Stringable
     {
         if ($cache !== null) {
             return new CacheAwareHeader($this->sdl->version, $this->version, $pre, $cache);
@@ -109,7 +115,7 @@ final class Image extends Proxy implements InitFlags
     private function detectVersion(): VersionInterface
     {
         /**
-         * @var object{SDL_GetVersion:callable(object):void} $ffi
+         * @var object{SDL_GetVersion:callable(object):void}|\FFI $ffi
          */
         $ffi = \FFI::cdef(<<<'CLANG'
             typedef uint8_t Uint8;
@@ -138,40 +144,45 @@ final class Image extends Proxy implements InitFlags
     }
 
     /**
+     * @param non-empty-string|null $library
      * @return non-empty-string
-     *
-     * @psalm-suppress MoreSpecificReturnType
-     * @psalm-suppress LessSpecificReturnStatement
      */
     private function detectLibraryPathname(?string $library): string
     {
         if ($library !== null) {
-            return \realpath($library) ?: Locator::resolve($library) ?? $library;
+            /**
+             * @var non-empty-string
+             * @phpstan-ignore-next-line ternary.shortNotAllowed
+             */
+            return \realpath($library) ?: Locator::resolve($library) ?: $library;
         }
 
-        return match (\PHP_OS_FAMILY) {
-            'Windows' => Locator::resolve('SDL2_image.dll')
+        /** @var non-empty-string */
+        return match ($this->sdl->platform) {
+            Platform::WINDOWS => Locator::resolve('SDL2_image.dll')
                 ?? throw new \RuntimeException(<<<'error'
                     Could not load [SDL2_image.dll].
 
                     Please make sure the SDL2_image library is installed or specify
                     the path to the binary explicitly.
                     error),
-            'BSD',
-            'Linux' => Locator::resolve('libSDL2_image-2.0.so', 'libSDL2_image-2.0.so.0')
+            Platform::FREEBSD,
+            Platform::LINUX => Locator::resolve('libSDL2_image-2.0.so', 'libSDL2_image-2.0.so.0')
                 ?? throw new \RuntimeException(<<<'error'
                     Could not load [libSDL2_image-2.0.so.0].
 
                     Please make sure the SDL2_image library is installed or specify
                     the path to the binary explicitly.
                     error),
-            'Darwin' => Locator::resolve('libSDL2_image-2.0.0.dylib')
+            // @phpstan-ignore-next-line match.alwaysTrue
+            Platform::DARWIN => Locator::resolve('libSDL2_image-2.0.0.dylib')
                 ?? throw new \RuntimeException(<<<'error'
                     Could not load [libSDL2_image-2.0.0.dylib].
 
                     Please make sure the SDL2_image library is installed or specify
                     the path to the binary explicitly.
                     error),
+            default => throw new \RuntimeException('Unknown platform'),
         };
     }
 

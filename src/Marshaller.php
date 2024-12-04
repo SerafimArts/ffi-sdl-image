@@ -10,8 +10,6 @@ use FFI\CData;
  * @internal this is an internal library trait, please do not use it in your code
  * @psalm-internal Serafim\SDL\Image
  *
- * @psalm-require-extends Image
- *
  * @mixin Image
  *
  * @property-read object $ffi
