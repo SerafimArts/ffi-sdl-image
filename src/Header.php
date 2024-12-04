@@ -35,8 +35,7 @@ final class Header implements HeaderInterface
 
     public function __construct(
         private readonly PreprocessorInterface $pre,
-    ) {
-    }
+    ) {}
 
     /**
      * @return non-empty-string
@@ -57,11 +56,11 @@ final class Header implements HeaderInterface
             $sdlImageVersion = Version::create($sdlImageVersion->toString());
         }
 
-        $pre->define('_SDL_IMAGE_VERSION_GTE', static fn (string $expected): bool
+        $pre->define('_SDL_IMAGE_VERSION_GTE', static fn(string $expected): bool
             => \version_compare($sdlImageVersion->toString(), $expected, '>='));
-        $pre->define('_SDL_VERSION_GTE', static fn (string $expected): bool
+        $pre->define('_SDL_VERSION_GTE', static fn(string $expected): bool
             => \version_compare($sdlVersion->toString(), $expected, '>='));
-        $pre->define('SDL_VERSION_ATLEAST', static fn (string $a, string $b, string $c): bool
+        $pre->define('SDL_VERSION_ATLEAST', static fn(string $a, string $b, string $c): bool
             => \version_compare($sdlVersion->toString(), \sprintf('%d.%d.%d', $a, $b, $c), '>='));
 
         $pre->add('SDL.h', self::SDL_H);
@@ -80,6 +79,6 @@ final class Header implements HeaderInterface
      */
     public function __toString(): string
     {
-        return (string)$this->pre->process(new \SplFileInfo($this->getPathname()));
+        return (string) $this->pre->process(new \SplFileInfo($this->getPathname()));
     }
 }
